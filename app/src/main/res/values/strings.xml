@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Pedidos</string>
+    <string name="urlBase">http://82.223.65.75:8000/</string>
+    <string name="urlLogin">api_user/autenticar.json</string>
+    <string name="urlCheck">api_check_user/check_token.json</string>
+</resources>
