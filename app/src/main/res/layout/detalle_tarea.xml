@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fffff1"
-    tools:context=".MainActivity">
+    tools:context=".DetalleTarea">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,56 +13,12 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/btnInformesGuardados"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@color/AzulBootstrap"
-            android:text="Informes Guardados"
-            android:textColor="@android:color/white" />
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Creación de Informe"
-            android:textColor="#343a40"
-            android:textSize="30sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="283dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:autoText="false"
-                android:text="Número de Pedido:"
-                android:textColor="#343a40"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/editText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:textColor="#343a40" />
-        </LinearLayout>
-
-        <Button
             android:id="@+id/btnDescargar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:background="@color/AzulBootstrap"
-            android:text="Descargar datos de pedido"
+            android:text="Documentación"
             android:textColor="@android:color/white" />
 
         <TextView
@@ -323,19 +279,14 @@
                 android:textSize="18sp" />
         </LinearLayout>
 
-        <TextView
+        <Button
+            android:id="@+id/btnLineasPedido"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:text="Líneas del pedido:"
-            android:textColor="#343a40"
-            android:textSize="18sp" />
-
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"></ListView>
+            android:layout_margin="10dp"
+            android:background="@color/AzulBootstrap"
+            android:text="Ver líneas del pedido"
+            android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/btnAñadir"
@@ -355,6 +306,7 @@
             android:textSize="18sp" />
 
         <ListView
+            android:id="@+id/listaFotos"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_marginLeft="20dp"
@@ -383,7 +335,7 @@
             android:background="#28a745"
             android:drawableTop="@android:drawable/checkbox_on_background"
             android:gravity="center"
-            android:text="Enviar informe y generar PDF"
+            android:text="Enviar informe y finalizar tarea"
             android:textAlignment="center"
             android:textColor="@android:color/white" />
     </LinearLayout>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DetallePedido">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <Button
+            android:id="@+id/btnDocumentacionDescargada"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@color/AzulBootstrap"
+            android:text="Ver documentación descargada"
+            android:textColor="@android:color/white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btnDocumentacionDescargada"
+            android:id="@+id/ll3"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnDescargarDocumentacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@color/AzulBootstrap"
+                android:text="Descargar todos los documentos"
+                android:textColor="@android:color/white"
+                android:textSize="10sp" />
+
+            <Button
+                android:id="@+id/btnDescargarSeleccion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1.5"
+                android:background="@color/AzulBootstrap"
+                android:text="Descargar selección"
+                android:textColor="@android:color/white"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/ll1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll3"
+            android:layout_margin="5dp"
+            android:layout_marginTop="20dp"
+            android:addStatesFromChildren="false"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/txtDocumentacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="Documentación técnica"
+                android:textColor="@android:color/black"
+                android:textSize="24sp" />
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/listaDocumentacion"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_below="@id/ll1"
+            android:layout_margin="5dp"
+            android:background="?attr/colorBackgroundFloating" />
+
+        <LinearLayout
+            android:id="@+id/ll2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/listaDocumentacion"
+            android:layout_margin="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/txtPrevencion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="Prevención"
+                android:textColor="@android:color/black"
+                android:textSize="24sp" />
+
+        </LinearLayout>
+
+
+        <ListView
+            android:id="@+id/listaPrevencion"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_below="@id/ll2"
+            android:layout_margin="5dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fotos"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:layout_margin="5dp"
+            android:layout_below="@id/listaPrevencion"
+            android:id="@+id/txtFotos"/>
+
+        <GridLayout
+            android:id="@+id/gridFotos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtFotos"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:rowCount="3" />
+
+    </RelativeLayout>
+</ScrollView>

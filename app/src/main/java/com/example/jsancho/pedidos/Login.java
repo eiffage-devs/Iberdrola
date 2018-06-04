@@ -1,6 +1,5 @@
 package com.example.jsancho.pedidos;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,27 +7,26 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.jsancho.pedidos.Clases_Auxiliares.Usuario;
 
-import org.json.JSONArray;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -64,7 +62,11 @@ public class Login extends AppCompatActivity {
             login.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    hacerLogin();
+                    try {
+                        hacerLogin();
+                    } catch (TimeoutError timeoutError) {
+                        Toast.makeText(getApplicationContext(), "Fallo al conectar con el servidor.\nCompruebe su conexión y vuelva a intentarlo.", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
@@ -76,48 +78,48 @@ public class Login extends AppCompatActivity {
 
     }
 
-    public void hacerLogin(){
+    public void hacerLogin() throws TimeoutError {
         final String username = user.getText().toString();
         final String password = pass.getText().toString();
+
 
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
 
         // Request a string response from the provided URL.
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, urlLogin,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    JSONObject job = new JSONObject(response);
-                                    String token = job.getString("token");
-                                    //Guardamos el token en Shared Preferences
-                                    SharedPreferences.Editor editor = getSharedPreferences("myPrefs", MODE_PRIVATE).edit();
-                                    editor.putString("token", token);
-                                    editor.apply();
-                                    recuperarUsuario(token);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }, new Response.ErrorListener() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, urlLogin,
+                new Response.Listener<String>() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-                        falloDeLogin();
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject job = new JSONObject(response);
+                            String token = job.getString("token");
+                            //Guardamos el token en Shared Preferences
+                            SharedPreferences.Editor editor = getSharedPreferences("myPrefs", MODE_PRIVATE).edit();
+                            editor.putString("token", token);
+                            editor.apply();
+                            recuperarUsuario(token);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
-                })
-                {
-                    @Override
-                    protected Map<String, String> getParams() {
-                        Map<String, String> params = new HashMap<String, String>();
-                        params.put("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
-                        params.put("username", username);
-                        params.put("password", password);
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                falloDeLogin();
+            }
+        })
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+                params.put("username", username);
+                params.put("password", password);
 
-                        return params;
-                    }
-                };
-
+                return params;
+            }
+        };
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
@@ -198,7 +200,11 @@ public class Login extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hacerLogin();
+                try {
+                    hacerLogin();
+                } catch (TimeoutError timeoutError) {
+                    Toast.makeText(getApplicationContext(), "Fallo al conectar con el servidor.\nCompruebe su conexión y vuelva a intentarlo.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

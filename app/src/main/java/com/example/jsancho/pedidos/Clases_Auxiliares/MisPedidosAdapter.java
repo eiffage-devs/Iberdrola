@@ -11,12 +11,12 @@ import com.example.jsancho.pedidos.R;
 
 import java.util.ArrayList;
 
-public class MisTareasAdapter extends ArrayAdapter<Tarea>{
+public class MisPedidosAdapter extends ArrayAdapter<Pedido> {
 
     private final Context context;
-    private ArrayList<Tarea> values;
+    private ArrayList<Pedido> values;
 
-    public MisTareasAdapter(Context context, ArrayList<Tarea> values){
+    public MisPedidosAdapter(Context context, ArrayList<Pedido> values){
 
         super(context, -1, values);
         this.context = context;
@@ -26,17 +26,16 @@ public class MisTareasAdapter extends ArrayAdapter<Tarea>{
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.custom_list_item, parent, false);
+        View rowView = inflater.inflate(R.layout.custom_list_item_pedido, parent, false);
 
         //----------Identificamos los elementos de cada item de la list----------\\
-        TextView numPedido =  rowView.findViewById(R.id.misTareasnumPedido);
-        TextView descPedido = rowView.findViewById(R.id.misTareasDescPedido);
-        TextView descTarea = rowView.findViewById(R.id.misTareasDescTarea);
+        TextView numPedido =  rowView.findViewById(R.id.misPedidosNumPedido);
+        TextView descPedido = rowView.findViewById(R.id.misPedidosDescPedido);
 
         numPedido.setText(values.get(position).getPedido());
         descPedido.setText(values.get(position).getDesc_pedido());
-        descTarea.setText(values.get(position).getDesc_tarea());
 
         return rowView;
     }
 }
+

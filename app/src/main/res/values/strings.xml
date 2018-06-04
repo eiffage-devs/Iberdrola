@@ -3,4 +3,64 @@
     <string name="urlBase">http://82.223.65.75:8000/</string>
     <string name="urlLogin">api_user/autenticar.json</string>
     <string name="urlCheck">api_check_user/check_token.json</string>
+    <string name="urlGetTareas">api_iberdrola/getListaPedidosUsuarioIBE</string>
+
+    <string-array name="categorias">
+        <item>1. Área: Centros de Transformación</item>
+        <item>2. Área: Líneas aéreas</item>
+        <item>3. Área: Redes Subterráneas</item>
+        <item>4. Área: Comunes</item>
+        <item>5. Área: Grupos electrógenos</item>
+        <item>6. Área: resto</item>
+    </string-array>
+
+    <string-array name="sub1">
+        <item>a. CT - Centros de Transformación</item>
+        <item>b. Celdas</item>
+        <item>c. Transformador</item>
+        <item>d. CBT - Cuadros BT</item>
+        <item>e. CGP - Cajas generales</item>
+        <item>f. Interconexión MT</item>
+        <item>g. Interconexiones BT</item>
+        <item>h. Obra civil</item>
+        <item>i. PAT - Puesta a tierra</item>
+        <item>j. Varios</item>
+    </string-array>
+
+    <string-array name="sub2">
+        <item>a. Avifauna</item>
+        <item>b. Apoyos celosía</item>
+        <item>c. Apoyos chapa</item>
+        <item>d. Apoyos hormigón</item>
+        <item>e. Apoyos madera</item>
+        <item>f. Crucelas/armados</item>
+        <item>g. Antiescalos</item>
+        <item>h. Aparamenta</item>
+        <item>i. Conexiones, empalmes, derivaciones</item>
+        <item>j. Herrajes/aisaldores</item>
+        <item>k. Cable de tierra, PAT, FO</item>
+        <item>l. OCRS</item>
+        <item>m. Paso a B2</item>
+        <item>n. Tala y Poda</item>
+        <item>o. Tendido BT - Trenzados</item>
+        <item>p. Tendido MT/AT - desnudos</item>
+        <item>q. Chatarra / recuperación</item>
+        <item>r. TET</item>
+        <item>s. Obra civil</item>
+        <item>t. Varios</item>
+    </string-array>
+
+    <string-array name="sub3">
+        <item>a. Arquetas/calas</item>
+        <item>b. Ensayos localización averías</item>
+        <item>c. Paso aéreo subterráneo - BT</item>
+        <item>d. Paso aéreo subterráneo MT/AT</item>
+        <item>e. Retidada 7 desmontaje de cable</item>
+        <item>f. Tendido RSBT</item>
+        <item>g. Tendido RSMT/AT</item>
+        <item>h. Terminaciones/conectores/empalmes RSBT</item>
+        <item>i. Terminaciones/conectores/empalmes RSMT</item>
+        <item>j. Varios</item>
+        <item>k. Zanjas, canalizaciones, pavimentación</item>
+    </string-array>
 </resources>
