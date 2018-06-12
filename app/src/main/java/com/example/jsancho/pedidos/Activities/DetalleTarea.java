@@ -12,11 +12,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.jsancho.pedidos.Clases_Auxiliares.Foto;
 import com.example.jsancho.pedidos.Clases_Auxiliares.ListaFotosAdapter;
 
 import java.io.File;
@@ -29,9 +32,11 @@ import java.util.ArrayList;
 public class DetalleTarea extends AppCompatActivity {
 
     Button abrirCamara;
-    ArrayList<Bitmap> myPictures;
+    ArrayList<Foto> myPictures;
     ListView listaFotos;
     ListaFotosAdapter listaFotosAdapter;
+
+    private static final int REQUEST_LOCATION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +44,15 @@ public class DetalleTarea extends AppCompatActivity {
         setContentView(R.layout.detalle_tarea);
         myPictures = new ArrayList<>();
         listaFotos = findViewById(R.id.listaFotos);
+        listaFotos.setOnTouchListener(new View.OnTouchListener() {
+            // Setting on Touch Listener for handling the touch inside ScrollView
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // Disallow the touch request for parent scroll on touch of child view
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
 
         abrirCamara = findViewById(R.id.btnAñadir);
         abrirCamara.setOnClickListener(new View.OnClickListener() {
@@ -55,6 +69,11 @@ public class DetalleTarea extends AppCompatActivity {
                 }
             }
         });
+
+        //----------Pedimos permisos GPS----------\\
+
+        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+
     }
 
     public void informesGuardados(View v) {
@@ -73,83 +92,24 @@ public class DetalleTarea extends AppCompatActivity {
 
     }
 
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 0) {
             try{
                 //Guardar imagen en Bitmap.
                 Bitmap image = (Bitmap) data.getExtras().get("data");
+                Foto nuevaFoto = new Foto(image,"-","-","-","-", "-", "-");
+                myPictures.add(nuevaFoto);
+                Log.d("Numero de fotos: ", myPictures.size() + "");
 
-                //Recuperar nombre de fichero donde irá la imagen.
-                SharedPreferences sp = getSharedPreferences("myPrefs", MODE_PRIVATE);
-                String i= "" + sp.getInt("i", 0);
-
-                //Guardar imagen en fichero
-                guardarFoto(image, i);
-
-                //Guardar el nombre del fichero donde irá la siguiente imagen.
-                SharedPreferences.Editor editor = getSharedPreferences("myPrefs", MODE_PRIVATE).edit();
-                int nuevoI = Integer.parseInt(i)+1;
-                editor.putInt("i", nuevoI);
-                editor.apply();
-
-                for(int j=0; j<nuevoI; j++){
-                    try {
-                        FileInputStream f = openFileInput(""+j);
-                        String s = f.toString();
-                        Bitmap bitmap = BitmapFactory.decodeFile(s);
-                        myPictures.add(bitmap);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                //myPictures.add(image);
-                listaFotosAdapter= new ListaFotosAdapter(getApplicationContext(), myPictures);
+                listaFotosAdapter= new ListaFotosAdapter(this, myPictures);
                 listaFotos.setAdapter(listaFotosAdapter);
+                Log.d("TAMAÑO DEL ARRAY", myPictures.size() + "");
+
             }
             catch (NullPointerException e){
-                Toast.makeText(this, data.getExtras().get("data").toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "No se ha adjuntado ninguna foto", Toast.LENGTH_SHORT).show();
             }
 
         }
-    }
-
-    private String guardarFoto(Bitmap bitmapImage, String nameFile){
-        ContextWrapper cw = new ContextWrapper(getApplicationContext());
-        // path to /data/data/yourapp/app_data/imageDir
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-        // Create imageDir
-        File mypath=new File(directory,nameFile + ".jpg");
-
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(mypath);
-            // Use the compress method on the BitMap object to write image to the OutputStream
-            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return directory.getAbsolutePath();
-    }
-
-    private void cargarFoto(String path)
-    {
-
-        try {
-            File f=new File(path, "profile.jpg");
-            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
-
-        }
-        catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-        }
-
     }
 }

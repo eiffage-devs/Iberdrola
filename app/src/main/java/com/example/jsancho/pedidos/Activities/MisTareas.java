@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -56,6 +57,8 @@ public class MisTareas extends AppCompatActivity {
         guardarTareasEnLocal();
 
         //----------CARGAR DATOS LOCALES----------\\
+
+
         listaTareas = findViewById(R.id.listaTareas);
         listaTareas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -69,9 +72,34 @@ public class MisTareas extends AppCompatActivity {
 
     }
 
+    //---------------------Mostrar las tareas almacenadas localmente----------------------\\
+    //----------(ESTE MÉTODO SE LLAMA AL ABRIR LA ACTIVITY Y AL ACTUALIZAR DATOS----------\\
+
+    public void mostrarTareasLocales(){
+
+        String [] args = new String[]{miUsuario.getCod_recurso()};
+        Cursor c = myDataBase.rawQuery("SELECT * FROM Tareas WHERE cod_recurso=?", args);
+
+        if(c.moveToFirst()){
+            do{
+                String pedido = c.getString(1);
+                String desc_pedido = c.getString(2);
+                String desc_tarea = c.getString(8);
+
+                Tarea t = new Tarea(pedido, desc_pedido, desc_tarea);
+                misTareas.add(t);
+            }while (c.moveToNext());
+
+            //----------Pintamos en el ListView las tareas proporcionadas por la base de datos----------\\
+            adapter = new MisTareasAdapter(getApplicationContext(), misTareas);
+            listaTareas.setAdapter(adapter);
+
+        }
+    }
+
     public void actualizarTareas(View v){
         //----------Petición a la API para recuperar las tareas activas del usuario----------\\
-
+        Toast.makeText(this, "ACTUALIZAR TAREAS", Toast.LENGTH_SHORT).show();
         RequestQueue queue = Volley.newRequestQueue(this);
         StringRequest sr = new StringRequest(Request.Method.GET, getResources().getString(R.string.urlBase) + getResources().getString(R.string.urlGetTareas),
                 new Response.Listener<String>() {
@@ -90,6 +118,8 @@ public class MisTareas extends AppCompatActivity {
                                 }
                                 else {
                                     //----------TODO: Recibir tareas y guardarlas en local----------\\
+                                    Log.d("Response", response);
+                                    guardarTareasEnLocal();
                                     mostrarTareasLocales();
 
                                 }
@@ -162,6 +192,55 @@ public class MisTareas extends AppCompatActivity {
                         ")");
 
         //----------Inserción de filas de prueba----------\\
+        String hola = "hola";
+
+        myDataBase.execSQL("INSERT INTO Tareas (pedido,desc_pedido,linea,cod_recurso,cargo_recurso,nom_recurso,estado_tarea,desc_tarea)\n" +
+                "VALUES ('4504076447', 'V.64061 CAMBIO SECCIONADORES OBSOLETOS V.64061 ST2', '10000', '9190', 'Jefe de Obra', " +
+                "'SANCHO GARCIA JUAN', 'PENDIENTE', 'Hacer fotos (BDD real)')");
+
+        myDataBase.execSQL("INSERT INTO Tareas (pedido,desc_pedido,linea,cod_recurso,cargo_recurso,nom_recurso,estado_tarea,desc_tarea)\n" +
+                "VALUES ('4504076447', 'V.64062 CAMBIO SECCIONADORES OBSOLETOS V.64062 ST2', '20000', '9190', 'Encargado', " +
+                "'SANCHO GARCIA JUAN', 'PENDIENTE', 'Revisar documentación (BDD real)')");
+
+        myDataBase.execSQL("INSERT INTO Tareas (pedido,desc_pedido,linea,cod_recurso,cargo_recurso,nom_recurso,estado_tarea,desc_tarea)\n" +
+                "VALUES ('4504076447', 'V.64063 CAMBIO SECCIONADORES OBSOLETOS V.64063 ST2', '30000', '5012', 'Jefe de Obra', " +
+                "'ANTONIO VILA', 'PENDIENTE', 'Hacer fotos (BDD real)')");
+
+        myDataBase.execSQL("INSERT INTO Tareas (pedido,desc_pedido,linea,cod_recurso,cargo_recurso,nom_recurso,estado_tarea,desc_tarea)\n" +
+                "VALUES ('4504076447', 'V.64061 CAMBIO SECCIONADORES OBSOLETOS V.64061 ST2', '10000', '9190', 'Jefe de Obra', " +
+                "'SANCHO GARCIA JUAN', 'PENDIENTE', 'Hacer fotos (BDD real)')");
+
+        myDataBase.execSQL("INSERT INTO Tareas (pedido,desc_pedido,linea,cod_recurso,cargo_recurso,nom_recurso,estado_tarea,desc_tarea)\n" +
+                "VALUES ('4504076447', 'V.64062 CAMBIO SECCIONADORES OBSOLETOS V.64062 ST2', '20000', '9190', 'Encargado', " +
+                "'SANCHO GARCIA JUAN', 'PENDIENTE', 'Revisar documentación (BDD real)')");
+
+        myDataBase.execSQL("INSERT INTO Tareas (pedido,desc_pedido,linea,cod_recurso,cargo_recurso,nom_recurso,estado_tarea,desc_tarea)\n" +
+                "VALUES ('4504076447', 'V.64063 CAMBIO SECCIONADORES OBSOLETOS V.64063 ST2', '30000', '5012', 'Jefe de Obra', " +
+                "'ANTONIO VILA', 'PENDIENTE', 'Hacer fotos (BDD real)')");
+
+        myDataBase.execSQL("INSERT INTO Tareas (pedido,desc_pedido,linea,cod_recurso,cargo_recurso,nom_recurso,estado_tarea,desc_tarea)\n" +
+                "VALUES ('4504076447', 'V.64061 CAMBIO SECCIONADORES OBSOLETOS V.64061 ST2', '10000', '9190', 'Jefe de Obra', " +
+                "'SANCHO GARCIA JUAN', 'PENDIENTE', 'Hacer fotos (BDD real)')");
+
+        myDataBase.execSQL("INSERT INTO Tareas (pedido,desc_pedido,linea,cod_recurso,cargo_recurso,nom_recurso,estado_tarea,desc_tarea)\n" +
+                "VALUES ('4504076447', 'V.64062 CAMBIO SECCIONADORES OBSOLETOS V.64062 ST2', '20000', '9190', 'Encargado', " +
+                "'SANCHO GARCIA JUAN', 'PENDIENTE', 'Revisar documentación (BDD real)')");
+
+        myDataBase.execSQL("INSERT INTO Tareas (pedido,desc_pedido,linea,cod_recurso,cargo_recurso,nom_recurso,estado_tarea,desc_tarea)\n" +
+                "VALUES ('4504076447', 'V.64063 CAMBIO SECCIONADORES OBSOLETOS V.64063 ST2', '30000', '5012', 'Jefe de Obra', " +
+                "'ANTONIO VILA', 'PENDIENTE', 'Hacer fotos (BDD real)')");
+
+        myDataBase.execSQL("INSERT INTO Tareas (pedido,desc_pedido,linea,cod_recurso,cargo_recurso,nom_recurso,estado_tarea,desc_tarea)\n" +
+                "VALUES ('4504076447', 'V.64061 CAMBIO SECCIONADORES OBSOLETOS V.64061 ST2', '10000', '9190', 'Jefe de Obra', " +
+                "'SANCHO GARCIA JUAN', 'PENDIENTE', 'Hacer fotos (BDD real)')");
+
+        myDataBase.execSQL("INSERT INTO Tareas (pedido,desc_pedido,linea,cod_recurso,cargo_recurso,nom_recurso,estado_tarea,desc_tarea)\n" +
+                "VALUES ('4504076447', 'V.64062 CAMBIO SECCIONADORES OBSOLETOS V.64062 ST2', '20000', '9190', 'Encargado', " +
+                "'SANCHO GARCIA JUAN', 'PENDIENTE', 'Revisar documentación (BDD real)')");
+
+        myDataBase.execSQL("INSERT INTO Tareas (pedido,desc_pedido,linea,cod_recurso,cargo_recurso,nom_recurso,estado_tarea,desc_tarea)\n" +
+                "VALUES ('4504076447', 'V.64063 CAMBIO SECCIONADORES OBSOLETOS V.64063 ST2', '30000', '5012', 'Jefe de Obra', " +
+                "'ANTONIO VILA', 'PENDIENTE', 'Hacer fotos (BDD real)')");
 
         myDataBase.execSQL("INSERT INTO Tareas (pedido,desc_pedido,linea,cod_recurso,cargo_recurso,nom_recurso,estado_tarea,desc_tarea)\n" +
                 "VALUES ('4504076447', 'V.64061 CAMBIO SECCIONADORES OBSOLETOS V.64061 ST2', '10000', '9190', 'Jefe de Obra', " +
@@ -176,30 +255,5 @@ public class MisTareas extends AppCompatActivity {
                 "'ANTONIO VILA', 'PENDIENTE', 'Hacer fotos (BDD real)')");
 
 
-    }
-
-    //---------------------Mostrar las tareas almacenadas localmente----------------------\\
-    //----------(ESTE MÉTODO SE LLAMA AL ABRIR LA ACTIVITY Y AL ACTUALIZAR DATOS----------\\
-
-    public void mostrarTareasLocales(){
-
-        String [] args = new String[]{miUsuario.getCod_recurso()};
-        Cursor c = myDataBase.rawQuery("SELECT * FROM Tareas WHERE cod_recurso=?", args);
-
-        if(c.moveToFirst()){
-            do{
-                String pedido = c.getString(1);
-                String desc_pedido = c.getString(2);
-                String desc_tarea = c.getString(8);
-
-                Tarea t = new Tarea(pedido, desc_pedido, desc_tarea);
-                misTareas.add(t);
-            }while (c.moveToNext());
-
-            //----------Pintamos en el ListView las tareas proporcionadas por la base de datos----------\\
-            adapter = new MisTareasAdapter(getApplicationContext(), misTareas);
-            listaTareas.setAdapter(adapter);
-
-        }
     }
 }
