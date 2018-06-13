@@ -1,13 +1,11 @@
-package com.example.jsancho.pedidos;
+package com.example.jsancho.pedidos.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.example.jsancho.pedidos.Clases_Auxiliares.DocumentosAdapter;
-import com.example.jsancho.pedidos.Clases_Auxiliares.MisPedidosAdapter;
-import com.example.jsancho.pedidos.Clases_Auxiliares.Pedido;
+import com.example.jsancho.pedidos.Adapters.DocumentosAdapter;
+import com.example.jsancho.pedidos.R;
 
 import java.util.ArrayList;
 

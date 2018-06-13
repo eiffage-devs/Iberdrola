@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MisPedidos">
+    tools:context=".Activities.MisPedidos">
 
 
     <ListView
@@ -15,4 +15,5 @@
         android:layout_alignParentEnd="true"
         android:background="@drawable/background"
         android:dividerHeight="20dp" />
+
 </RelativeLayout>

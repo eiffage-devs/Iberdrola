@@ -1,9 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.LineasPedido">
+    tools:context=".Activities.LineasPedido"
+    >
 
-</android.support.constraint.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/cabecera"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#007bff"
+            android:gravity="center"
+            android:padding="2dp"
+            android:paddingBottom="10dp"
+            android:text="Código de producto"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.53"
+            android:background="#007bff"
+            android:gravity="center"
+            android:padding="2dp"
+            android:paddingBottom="10dp"
+            android:text="Desc. de producto"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.06"
+            android:background="#007bff"
+            android:gravity="center"
+            android:padding="2dp"
+            android:paddingBottom="10dp"
+            android:text="Cantidad"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.07"
+            android:background="#007bff"
+            android:gravity="center"
+            android:padding="2dp"
+            android:paddingBottom="10dp"
+            android:text="Ud. medida"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listaLineasPedido"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/cabecera"
+        android:dividerHeight="10dp" />
+
+</RelativeLayout>

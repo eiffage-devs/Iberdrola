@@ -1,4 +1,4 @@
-package com.example.jsancho.pedidos.Clases_Auxiliares;
+package com.example.jsancho.pedidos.Objetos;
 
 import android.graphics.Bitmap;
 
@@ -12,8 +12,12 @@ public class Foto {
     private String coordenadasPedido;
     private String coordenadasFoto;
 
+    String idTarea;
 
-    public Foto(Bitmap foto, String descripcion, String categoria, String subcategoria, String fecha, String hora, String coordenadasFoto){
+    private String id;
+
+
+    public Foto(Bitmap foto, String descripcion, String categoria, String subcategoria, String fecha, String hora, String coordenadasFoto, String idTarea, String id){
         this.foto = foto;
         this.descripcion = descripcion;
         this.categoria = categoria;
@@ -21,6 +25,9 @@ public class Foto {
         this.fecha = fecha;
         this.hora = hora;
         this.coordenadasFoto = coordenadasFoto;
+        this.idTarea = idTarea;
+        this.id = id;
+
     }
 
     public Bitmap getFoto() {
@@ -55,6 +62,12 @@ public class Foto {
         return coordenadasPedido;
     }
 
+    public String getIdTarea() {
+        return idTarea;
+    }
+
+    public String getId() { return id;}
+
     public void setFoto(Bitmap foto) {
         this.foto = foto;
     }
@@ -87,16 +100,19 @@ public class Foto {
         this.coordenadasPedido = coordenadasPedido;
     }
 
+    public void setId(String id){this.id = id;}
+
     @Override
     public String toString() {
         String s =
                 this.getFoto().toString() + "," +
-                this.getDescripcion() + "," +
-                this.getCategoria() + "," +
-                this.getSubcategoria() + "," +
-                this.getFecha() + "," +
-                this.getHora() + "," +
-                this.getCoordenadasFoto();
+                        this.getDescripcion() + "," +
+                        this.getCategoria() + "," +
+                        this.getSubcategoria() + "," +
+                        this.getFecha() + "," +
+                        this.getHora() + "," +
+                        this.getCoordenadasFoto() + "," +
+                        this.getId();
         return s;
     }
 }

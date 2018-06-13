@@ -1,14 +1,11 @@
-package com.example.jsancho.pedidos.Clases_Auxiliares;
+package com.example.jsancho.pedidos.Adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.example.jsancho.pedidos.R;
 

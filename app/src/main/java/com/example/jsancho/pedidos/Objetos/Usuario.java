@@ -1,4 +1,4 @@
-package com.example.jsancho.pedidos.Clases_Auxiliares;
+package com.example.jsancho.pedidos.Objetos;
 
 import android.os.Parcel;
 import android.os.Parcelable;

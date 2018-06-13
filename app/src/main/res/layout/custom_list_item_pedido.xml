@@ -64,4 +64,31 @@
             android:textSize="14sp" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/listValue1">
+
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="#343a40"
+            android:text="Documentación"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/tareasDeUnPedido"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="#343a40"
+            android:text="Tareas"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
 </RelativeLayout>

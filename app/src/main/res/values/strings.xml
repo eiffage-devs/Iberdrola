@@ -3,7 +3,8 @@
     <string name="urlBase">http://82.223.65.75:8000/</string>
     <string name="urlLogin">api_user/autenticar.json</string>
     <string name="urlCheck">api_check_user/check_token.json</string>
-    <string name="urlGetTareas">api_iberdrola/getListaPedidosUsuarioIBE</string>
+    <string name="urlGetTareas">api_iberdrola/getListaTareasUsuarioIBE</string>
+    <string name="urlLineasPedido">api_iberdrola/getLineasPedidoIBE/p/</string>
 
     <string-array name="categorias">
         <item>1. Área: Centros de Transformación</item>

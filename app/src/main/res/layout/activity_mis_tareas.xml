@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MisTareas"
+    tools:context=".Activities.MisTareas"
     android:orientation="vertical">
 
 
     <ListView
         android:id="@+id/listaTareas"
         android:layout_width="match_parent"
-        android:layout_height="666dp"
+        android:layout_height="match_parent"
         android:background="@drawable/background"
         android:dividerHeight="20dp" />
 

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fffff1"
-    tools:context=".DetalleTarea">
+    tools:context=".Activities.DetalleTarea">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,7 +57,7 @@
                 android:textColor="#343a40" />
 
             <TextView
-                android:id="@+id/textView7"
+                android:id="@+id/numPedidoDT"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
@@ -95,15 +95,15 @@
                 android:textColor="#343a40" />
 
             <TextView
-                android:id="@+id/textView9"
+                android:id="@+id/descPedidoDT"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="2"
                 android:gravity="center_vertical"
                 android:text="Esta es una descripción de ejemplo"
-                android:textColor="#343a40"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                android:textColor="#343a40" />
         </LinearLayout>
 
         <LinearLayout
@@ -133,7 +133,7 @@
                 android:textColor="#343a40" />
 
             <TextView
-                android:id="@+id/textView11"
+                android:id="@+id/fechaPedidoDT"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
@@ -170,7 +170,7 @@
                 android:textColor="#343a40" />
 
             <TextView
-                android:id="@+id/textView13"
+                android:id="@+id/marcoPedidoDT"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
@@ -207,7 +207,7 @@
                 android:textColor="#343a40" />
 
             <TextView
-                android:id="@+id/textView15"
+                android:id="@+id/localizacionPedidoDT"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
@@ -244,7 +244,7 @@
                 android:textColor="#343a40" />
 
             <TextView
-                android:id="@+id/textView17"
+                android:id="@+id/localidadPedidoDT"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
@@ -285,16 +285,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:background="@color/AzulBootstrap"
+            android:onClick="lineasPedido"
             android:text="Ver líneas del pedido"
-            android:textColor="@android:color/white" />
-
-        <Button
-            android:id="@+id/btnAñadir"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@color/AzulBootstrap"
-            android:text="Añadir foto de la obra"
             android:textColor="@android:color/white" />
 
         <TextView
@@ -305,12 +297,29 @@
             android:textColor="#343a40"
             android:textSize="18sp" />
 
-        <ListView
-            android:id="@+id/listaFotos"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ListView
+                android:id="@+id/listaFotos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:dividerHeight="20dp"></ListView>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnAñadir"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"></ListView>
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@color/AzulBootstrap"
+            android:text="Añadir foto de la obra"
+            android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/btnGuardar"
@@ -320,6 +329,7 @@
             android:background="@color/AzulBootstrap"
             android:drawableTop="@android:drawable/ic_menu_save"
             android:gravity="center"
+            android:onClick="guardarInforme"
             android:text="Guardar informe"
             android:textAlignment="center"
             android:textColor="@android:color/white" />

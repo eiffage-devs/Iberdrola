@@ -1,4 +1,4 @@
-package com.example.jsancho.pedidos;
+package com.example.jsancho.pedidos.Activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -24,7 +24,8 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.jsancho.pedidos.Clases_Auxiliares.Usuario;
+import com.example.jsancho.pedidos.Objetos.Usuario;
+import com.example.jsancho.pedidos.R;
 
 
 import org.json.JSONException;
@@ -180,7 +181,7 @@ public class Login extends AppCompatActivity {
         message.setText(s);
         message.setMovementMethod(LinkMovementMethod.getInstance());
 
-        AlertDialog.Builder alertdialogobuilder = new AlertDialog.Builder(this);
+        AlertDialog.Builder alertdialogobuilder = new AlertDialog.Builder(this, R.style.MyDialogTheme);
         alertdialogobuilder
                 .setTitle("Login")
                 .setView(message)

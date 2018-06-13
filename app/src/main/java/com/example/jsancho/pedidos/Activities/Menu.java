@@ -1,10 +1,11 @@
-package com.example.jsancho.pedidos;
+package com.example.jsancho.pedidos.Activities;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -15,7 +16,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.jsancho.pedidos.Clases_Auxiliares.Usuario;
+import com.example.jsancho.pedidos.Objetos.Usuario;
+import com.example.jsancho.pedidos.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,6 +60,7 @@ public class Menu extends AppCompatActivity {
     public void misTareas(View v){
         Intent intent = new Intent(this, MisTareas.class);
         intent.putExtra("miUsuario", miUsuario);
+        intent.putExtra("filtradoPedido", "todo");
         startActivity(intent);
     }
 

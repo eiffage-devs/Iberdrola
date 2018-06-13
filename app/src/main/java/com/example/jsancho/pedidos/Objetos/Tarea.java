@@ -1,4 +1,4 @@
-package com.example.jsancho.pedidos.Clases_Auxiliares;
+package com.example.jsancho.pedidos.Objetos;
 
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -7,22 +7,38 @@ import com.example.jsancho.pedidos.R;
 
 public class Tarea {
 
-    private String pedido, desc_pedido, desc_tarea;
-    public Tarea(String pedido, String desc_pedido, String desc_tarea){
-        this.pedido = pedido;
-        this.desc_pedido = desc_pedido;
-        this.desc_tarea = desc_tarea;
+    private String cod_tarea, descripcion, cod_recurso, cod_pedido, cargoRecurso, nombreRecurso;
+
+    public Tarea(String cod_tarea, String descripcion, String cod_recurso, String cod_pedido, String cargoRecurso, String nombreRecurso){
+        this.cod_tarea = cod_tarea;
+        this.descripcion = descripcion;
+        this.cod_recurso = cod_recurso;
+        this.cod_pedido = cod_pedido;
+        this.cargoRecurso = cargoRecurso;
+        this.nombreRecurso = nombreRecurso;
     }
 
-    public String getPedido() {
-        return pedido;
+    public String getCod_tarea() {
+        return cod_tarea;
     }
 
-    public String getDesc_pedido() {
-        return desc_pedido;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public String getDesc_tarea() {
-        return desc_tarea;
+    public String getCod_recurso() {
+        return cod_recurso;
+    }
+
+    public String getCod_pedido() {
+        return cod_pedido;
+    }
+
+    public String getCargoRecurso() {
+        return cargoRecurso;
+    }
+
+    public String getNombreRecurso() {
+        return nombreRecurso;
     }
 }
