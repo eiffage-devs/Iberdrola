@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:background="@drawable/background"
+        android:background="#343a40"
         android:dividerHeight="20dp" />
 
 </RelativeLayout>

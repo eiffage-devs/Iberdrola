@@ -5,14 +5,16 @@
     <string name="urlCheck">api_check_user/check_token.json</string>
     <string name="urlGetTareas">api_iberdrola/getListaTareasUsuarioIBE</string>
     <string name="urlLineasPedido">api_iberdrola/getLineasPedidoIBE/p/</string>
+    <string name="urlEnviarFoto">/api_iberdrola/creaIBE/fotos_IB</string>
+    <string name="urlFinalizarTarea">api_iberdrola/finTareaIBE/tarea</string>
 
     <string-array name="categorias">
-        <item>1. Área: Centros de Transformación</item>
-        <item>2. Área: Líneas aéreas</item>
-        <item>3. Área: Redes Subterráneas</item>
-        <item>4. Área: Comunes</item>
-        <item>5. Área: Grupos electrógenos</item>
-        <item>6. Área: resto</item>
+        <item>1. Centros de Transformación</item>
+        <item>2. Líneas aéreas</item>
+        <item>3. Redes Subterráneas</item>
+        <item>4. Comunes</item>
+        <item>5. Grupos electrógenos</item>
+        <item>6. resto</item>
     </string-array>
 
     <string-array name="sub1">

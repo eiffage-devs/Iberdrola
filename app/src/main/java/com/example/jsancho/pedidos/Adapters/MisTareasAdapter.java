@@ -22,6 +22,7 @@ public class MisTareasAdapter extends ArrayAdapter<Tarea>{
     private final Context context;
     private ArrayList<Tarea> values;
     SQLiteDatabase db;
+    MySqliteOpenHelper mySqliteOpenHelper;
 
     public MisTareasAdapter(Context context, ArrayList<Tarea> values){
 
@@ -35,7 +36,7 @@ public class MisTareasAdapter extends ArrayAdapter<Tarea>{
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.custom_list_item, parent, false);
 
-        MySqliteOpenHelper mySqliteOpenHelper = new MySqliteOpenHelper(context);
+        mySqliteOpenHelper = new MySqliteOpenHelper(context);
         db = mySqliteOpenHelper.getReadableDatabase();
 
         Tarea t = values.get(position);
@@ -56,11 +57,23 @@ public class MisTareasAdapter extends ArrayAdapter<Tarea>{
         TextView numPedido =  rowView.findViewById(R.id.misTareasnumPedido);
         TextView descPedido = rowView.findViewById(R.id.misTareasDescPedido);
         TextView descTarea = rowView.findViewById(R.id.misTareasDescTarea);
-
+        TextView hayFotos = rowView.findViewById(R.id.txtHayFotos);
+        boolean b = hayFotos(values.get(position).getCod_tarea());
         numPedido.setText(codigoPedido);
         descPedido.setText(descripcionPedido);
         descTarea.setText(descripcionTarea);
-
+        if(b){
+            hayFotos.setTextColor(context.getResources().getColor(android.R.color.holo_orange_light));
+            hayFotos.setText("FOTOS PENDIENTES DE ENVIAR");
+        }
         return rowView;
+    }
+
+    public boolean hayFotos(String idTarea){
+        Cursor c = mySqliteOpenHelper.recuperarFotos(db, idTarea);
+        if(c.getCount() > 0){
+            return true;
+        }
+        return false;
     }
 }

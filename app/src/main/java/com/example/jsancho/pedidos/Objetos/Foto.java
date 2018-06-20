@@ -1,6 +1,13 @@
 package com.example.jsancho.pedidos.Objetos;
 
 import android.graphics.Bitmap;
+import android.util.Base64;
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 
 public class Foto {
 
@@ -115,4 +122,34 @@ public class Foto {
                         this.getId();
         return s;
     }
+
+
+    public String toJSON(String cod_pedido){
+
+        JSONObject jsonObject= new JSONObject();
+        try {
+
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            this.getFoto().compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            byte[] byteArray = stream.toByteArray();
+            String encodedImage = "holapaco, " + Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+            jsonObject.put("num_pedido", cod_pedido);
+            jsonObject.put("num_tarea", idTarea);
+            jsonObject.put("descripcion", getDescripcion());
+            jsonObject.put("area", getCategoria());
+            jsonObject.put("subarea", getSubcategoria());
+            jsonObject.put("coordenadas", getCoordenadasFoto());
+            jsonObject.put("fecha", getFecha() + ", " + getHora());
+            jsonObject.put("foto", encodedImage);
+            Log.d("JSON A ENVIAR", jsonObject.toString());
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return "";
+        }
+
+    }
+
 }

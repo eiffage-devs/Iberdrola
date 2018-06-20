@@ -255,29 +255,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Fecha de informe:"
-                android:textColor="@color/AzulBootstrap"
-                android:textSize="18sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.5"
-                android:gravity="center"
-                android:text="28 Mayo 2018"
-                android:textColor="@color/AzulBootstrap"
-                android:textSize="18sp" />
-        </LinearLayout>
 
         <Button
             android:id="@+id/btnLineasPedido"
@@ -293,7 +270,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:text="Fotografías del albarán:"
+            android:text="Fotografías:"
             android:textColor="#343a40"
             android:textSize="18sp" />
 
@@ -330,9 +307,19 @@
             android:drawableTop="@android:drawable/ic_menu_save"
             android:gravity="center"
             android:onClick="guardarInforme"
-            android:text="Guardar informe"
+            android:text="Guardar fotos"
             android:textAlignment="center"
             android:textColor="@android:color/white" />
+
+        <CheckBox
+            android:id="@+id/checkFinalizar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:buttonTint="@color/VerdeBootstrap"
+            android:cursorVisible="false"
+            android:gravity="center_vertical"
+            android:text="Finalizar tarea" />
 
         <Button
             android:id="@+id/btnEnviar"
@@ -342,10 +329,10 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="5dp"
-            android:background="#28a745"
-            android:drawableTop="@android:drawable/checkbox_on_background"
+            android:background="@color/VerdeBootstrap"
             android:gravity="center"
-            android:text="Enviar informe y finalizar tarea"
+            android:onClick="enviarInforme"
+            android:text="Enviar fotos"
             android:textAlignment="center"
             android:textColor="@android:color/white" />
     </LinearLayout>

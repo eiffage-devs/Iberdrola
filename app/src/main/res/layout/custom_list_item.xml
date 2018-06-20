@@ -2,8 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#aaffffff"
+    android:background="#FFF"
     android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"></LinearLayout>
 
     <LinearLayout
         android:id="@+id/listTitle1"
@@ -69,41 +74,62 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/listValue1"
-        android:layout_marginTop="0dp"
         android:orientation="horizontal">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
             android:layout_weight="1"
-            android:text="Desc. tarea:"
-            android:textAlignment="center"
-            android:textColor="@android:color/black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Desc. tarea:"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-    <LinearLayout
-        android:id="@+id/listValue2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/listTitle2"
-        android:layout_marginTop="0dp"
-        android:orientation="horizontal">
+            <TextView
+                android:id="@+id/misTareasDescTarea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Hacer fotos de la obra. Recoger documentación."
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/misTareasDescTarea"
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="Hacer fotos de la obra. Recoger documentación."
-            android:textAlignment="center"
-            android:textColor="@android:color/black"
-            android:textSize="14sp" />
+            android:layout_gravity="center"
+            android:layout_marginTop="0dp"
+            android:layout_weight="2"
+            android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/txtHayFotos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
     </LinearLayout>
+
+
 </RelativeLayout>

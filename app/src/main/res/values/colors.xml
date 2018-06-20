@@ -5,4 +5,7 @@
     <color name="colorAccent">#fff</color>
     <color name="AzulBootstrap">#428bca</color>
     <color name="bootstrapDisabled">#007bff</color>
+    <color name="VerdeBootstrap">#28a745</color>
+    <color name="VerdeDisabled">#55815f</color>
+    <color name="RojoBootstrap">#dc3545</color>
 </resources>

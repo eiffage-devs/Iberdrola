@@ -1,5 +1,6 @@
 package com.example.jsancho.pedidos.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -43,6 +44,7 @@ public class Login extends AppCompatActivity {
     private boolean validado = false;
     static String urlLogin;
     static String urlCheck;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +74,13 @@ public class Login extends AppCompatActivity {
             });
         }
         else {
+            progressDialog = new ProgressDialog(Login.this);
+            progressDialog.setMessage("Espere, por favor"); // Setting Message
+            progressDialog.setTitle("Iniciando sesión..."); // Setting Title
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
+            progressDialog.show(); // Display Progress Dialog
+            progressDialog.setCancelable(false);
+            progressDialog.show();
             recuperarUsuario(tokenGuardado);
         }
 
@@ -83,6 +92,13 @@ public class Login extends AppCompatActivity {
         final String username = user.getText().toString();
         final String password = pass.getText().toString();
 
+        progressDialog = new ProgressDialog(Login.this);
+        progressDialog.setMessage("Espere, por favor"); // Setting Message
+        progressDialog.setTitle("Iniciando sesión..."); // Setting Title
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
+        progressDialog.show(); // Display Progress Dialog
+        progressDialog.setCancelable(false);
+        progressDialog.show();
 
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
@@ -107,6 +123,7 @@ public class Login extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
                 falloDeLogin();
             }
         })
@@ -141,7 +158,7 @@ public class Login extends AppCompatActivity {
                             String delegacion=job.getString("delegacion");
                             String cod_recurso=job.getString("cod_recurso");
                             nuevoUsuario[0] = new Usuario(token, email, empresa, nombre, delegacion, cod_recurso);
-
+                            progressDialog.dismiss();
                             //Enviar a la siguiente pantalla
                             Intent intent = new Intent(Login.this, Menu.class);
                             intent.putExtra("miUsuario", nuevoUsuario[0]);
@@ -157,6 +174,7 @@ public class Login extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
                 falloDeDatos();
             }
         }) {

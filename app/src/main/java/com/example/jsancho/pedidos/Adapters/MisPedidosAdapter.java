@@ -46,6 +46,7 @@ public class MisPedidosAdapter extends ArrayAdapter<Pedido> {
             public void onClick(View v) {
                 Intent intent = new Intent(context, MisTareas.class);
                 intent.putExtra("filtro_tareas", values.get(id).getCodigo());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
         });

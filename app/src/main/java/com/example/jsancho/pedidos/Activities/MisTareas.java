@@ -1,8 +1,11 @@
 package com.example.jsancho.pedidos.Activities;
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AlertDialog;
@@ -13,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -32,9 +36,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class MisTareas extends AppCompatActivity {
 
@@ -46,12 +56,15 @@ public class MisTareas extends AppCompatActivity {
     MySqliteOpenHelper mySqliteOpenHelper;
     String pedido;
     Button actualizarTareas;
+    TextView ultimaActualizacion;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mis_tareas);
         getSupportActionBar().setTitle("Mis tareas");
+        mostrarUltimaActualizacion();
         misTareas = new ArrayList<>();
         pedido = "todo";
         //----------Recibir datos de usuario de la activity anterior----------\\
@@ -92,6 +105,13 @@ public class MisTareas extends AppCompatActivity {
         mostrarTareasLocales();
 
 
+    }
+
+    @Override
+    protected void onRestart() {
+        mostrarTareasLocales();
+        mostrarUltimaActualizacion();
+        super.onRestart();
     }
 
     //---------------------Mostrar las tareas almacenadas localmente----------------------\\
@@ -149,7 +169,17 @@ public class MisTareas extends AppCompatActivity {
     }
 
     public void actualizarTareas(View v){
+
+        progressDialog = new ProgressDialog(MisTareas.this);
+        progressDialog.setMessage("Espere, por favor"); // Setting Message
+        progressDialog.setTitle("Actualizando tareas..."); // Setting Title
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
+        progressDialog.show(); // Display Progress Dialog
+        progressDialog.setCancelable(false);
+        progressDialog.show();
         //----------Petición a la API para recuperar las tareas activas del usuario----------\\
+        actualizarTareas = findViewById(R.id.btnActualizarTareas);
+        actualizarTareas.setEnabled(false);
         RequestQueue queue = Volley.newRequestQueue(this);
         StringRequest sr = new StringRequest(Request.Method.GET, getResources().getString(R.string.urlBase) + getResources().getString(R.string.urlGetTareas),
                 new Response.Listener<String>() {
@@ -165,6 +195,7 @@ public class MisTareas extends AppCompatActivity {
                             if(error.equals("false")){
                                 if(content.equals("null")){
                                     mensajeAlert("Ya tienes toda la información actualizada");
+                                    guardarActualizacion();
                                 }
                                 else {
                                     //----------TODO: Recibir tareas y guardarlas en local----------\\
@@ -175,10 +206,13 @@ public class MisTareas extends AppCompatActivity {
                                     Log.d("Response", response);
                                     guardarTareasEnLocal(tareas);
                                     mostrarTareasLocales();
+                                    guardarActualizacion();
 
                                     JSONObject jo = new JSONObject(content);
                                     JSONArray pedidos = jo.getJSONArray("pedidos");
                                     actualizarPedidos(pedidos);
+                                    actualizarTareas.setEnabled(true);
+                                    progressDialog.dismiss();
 
                                 }
                             }
@@ -202,6 +236,8 @@ public class MisTareas extends AppCompatActivity {
             }
         };
         queue.add(sr);
+
+
     }
 
     //----------Mostrar mensaje mediante alert en la Activity----------\\
@@ -219,11 +255,12 @@ public class MisTareas extends AppCompatActivity {
                     }
                 })
                 .create();
-        alertdialogobuilder.show();
+        if (!MisTareas.this.isFinishing()){
+            alertdialogobuilder.show();
+        }
     }
 
     //-----------------------------Guardado de tareas en local----------------------------\\
-    //----------TODO: (PENDIENTE DE MODIFICAR CUANDO TRAIGAMOS LOS DATOS DESDE REMOTO)----------\\
 
     public void guardarTareasEnLocal(JSONArray response){
 
@@ -237,7 +274,7 @@ public class MisTareas extends AppCompatActivity {
                 "CREATE TABLE IF NOT EXISTS Tarea (" +
                         "cod_tarea TEXT PRIMARY KEY, descripcion TEXT," +
                         "cod_recurso TEXT, cod_pedido TEXT," +
-                        "cargoRecurso TEXT, nombreRecurso TEXT," +
+                        "cargoRecurso TEXT, nombreRecurso TEXT, algunaFotoEnviada TEXT," +
                         "FOREIGN KEY(cod_pedido) REFERENCES Pedido(codigo))");
 
         //----------Inserción de tareas obtenidas a través del API----------\\
@@ -270,6 +307,7 @@ public class MisTareas extends AppCompatActivity {
     }
 
     public void actualizarPedidos(JSONArray response){
+
         myDataBase.execSQL("DROP TABLE IF EXISTS Pedido");
 
         myDataBase.execSQL("CREATE TABLE Pedido (" +
@@ -301,5 +339,50 @@ public class MisTareas extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public void guardarActualizacion(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+        Date date = new Date();
+        String fecha = dateFormat.format(date);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("CET"));
+        String tempHora = "" + calendar.get(Calendar.HOUR_OF_DAY);
+        if (tempHora.length() == 1) {
+            tempHora = "0" + tempHora;
+        }
+        String tempMin = "" + calendar.get(Calendar.MINUTE);
+        if (tempMin.length() == 1) {
+            tempMin = "0" + tempMin;
+        }
+        String tempSeg = "" + calendar.get(Calendar.SECOND);
+        if (tempSeg.length() == 1) {
+            tempSeg = "0" + tempSeg;
+        }
+
+        String hora = tempHora + ":" + tempMin + ":" + tempSeg;
+
+        ultimaActualizacion  = findViewById(R.id.ultimaActualizacion);
+        ultimaActualizacion.setText("Última actualización: AHORA");
+        ultimaActualizacion.setBackgroundColor(getResources().getColor(R.color.VerdeBootstrap));
+        SharedPreferences.Editor editor = getSharedPreferences("myPrefs", MODE_PRIVATE).edit();
+        editor.putString("ultimaActualizacionFecha", fecha);
+        editor.putString("ultimaActualizacionHora", hora);
+        editor.apply();
+
+    }
+
+    public void mostrarUltimaActualizacion(){
+        SharedPreferences myPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+        String f = myPrefs.getString("ultimaActualizacionFecha", "-");
+        String s = myPrefs.getString("ultimaActualizacionHora", "-");
+        ultimaActualizacion = findViewById(R.id.ultimaActualizacion);
+        ultimaActualizacion.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_light));
+        ultimaActualizacion  = findViewById(R.id.ultimaActualizacion);
+        if(!f.equals("-") && !s.equals("-")){
+            ultimaActualizacion.setText("Última actualización: " + f + ", " + s);
+        }
+
     }
 }

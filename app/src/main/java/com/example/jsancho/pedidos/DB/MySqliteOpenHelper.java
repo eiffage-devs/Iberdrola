@@ -15,12 +15,13 @@ import com.example.jsancho.pedidos.Objetos.Pedido;
 import com.example.jsancho.pedidos.Objetos.Tarea;
 
 import java.io.ByteArrayOutputStream;
+import java.sql.SQLData;
 
 public class MySqliteOpenHelper  extends SQLiteOpenHelper {
 
     Context context;
     private static final String DATABASE_NAME = "Pedidos";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
 
     private static final String CREAR_TABLA_PEDIDO = "CREATE TABLE Pedido (" +
@@ -31,7 +32,7 @@ public class MySqliteOpenHelper  extends SQLiteOpenHelper {
     private static final String CREAR_TABLA_TAREA = "CREATE TABLE Tarea (" +
             "cod_tarea TEXT PRIMARY KEY, descripcion TEXT," +
             "cod_recurso TEXT, cod_pedido TEXT," +
-            "cargoRecurso TEXT, nombreRecurso TEXT," +
+            "cargoRecurso TEXT, nombreRecurso TEXT, algunaFotoEnviada TEXT," +
             "FOREIGN KEY(cod_pedido) REFERENCES Pedido(codigo))";
 
     private static final String CREAR_TABLA_FOTO = "CREATE TABLE Foto (" +
@@ -85,7 +86,7 @@ public class MySqliteOpenHelper  extends SQLiteOpenHelper {
 
         db.execSQL("INSERT INTO TAREA VALUES(" +
                 " " + cod_tarea + "," + descripcion + "," + cod_recurso + "" +
-                "," + cod_pedido + "," + cargoRecurso + "," + nombreRecurso +")");
+                "," + cod_pedido + "," + cargoRecurso + "," + nombreRecurso +", 'false')");
     }
 
     public void insertarPedido(SQLiteDatabase db, Pedido pedido){
@@ -127,19 +128,27 @@ public class MySqliteOpenHelper  extends SQLiteOpenHelper {
     //----------La foto se ha enviado con éxito al servidor, o se borra en la app y se guarda el informe----------\\
 
     public void borrarFoto(SQLiteDatabase db, Foto miFoto){
+
+
+        String borrar = miFoto.getId();
+
+        db.execSQL("DELETE FROM FOTO WHERE imagen = " + borrar + "");
+
+    }
+
+    public void borrarFoto(SQLiteDatabase db, String idFoto){
         //int borrar = miFoto.getId();
 
-        //db.execSQL("DELETE FROM FOTO WHERE id = " + borrar + "");
+        db.execSQL("DELETE FROM FOTO WHERE id = " + idFoto + "");
 
     }
 
 
     //----------Se elimina la tarea porque se ha enviado con éxito, marcando la casilla de finalizar----------\\
 
-    public void borrarTarea(SQLiteDatabase db, Tarea tarea){
-        String borrar = tarea.getCod_tarea();
+    public void borrarTarea(SQLiteDatabase db, String idTarea){
 
-        db.execSQL("DELETE FROM TAREA WHERE ID LIKE '" + borrar + "'");
+        db.execSQL("DELETE FROM TAREA WHERE cod_tarea LIKE '" + idTarea + "'");
     }
 
 
@@ -163,5 +172,17 @@ public class MySqliteOpenHelper  extends SQLiteOpenHelper {
     //----------Borrar todas las fotos de una tarea (se hace antes de guardar)----------\\
     public void borrarTodasLasFotosDeTarea(SQLiteDatabase db, String idTarea){
         db.execSQL("DELETE FROM Foto WHERE idTarea LIKE '" + idTarea + "'");
+    }
+
+    public void fotosEnviadas(SQLiteDatabase db, String idTarea){
+        db.execSQL("UPDATE Tarea SET algunaFotoEnviada = 'true' WHERE cod_tarea LIKE '" + idTarea + "'");
+    }
+
+    public boolean esTareaConFotoEnviada(SQLiteDatabase db, String idTarea){
+        Cursor c = db.rawQuery("SELECT algunaFotoEnviada FROM Tarea WHERE cod_tarea LIKE '" + idTarea + "' AND algunaFotoEnviada LIKE 'true'", null);
+        if(c.getCount() > 0){
+            return true;
+        }
+        return false;
     }
 }

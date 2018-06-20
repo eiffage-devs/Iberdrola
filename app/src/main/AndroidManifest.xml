@@ -18,7 +18,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Activities.DetalleTarea"
-            android:label="Informes" />
+            android:label="Informes"
+            android:configChanges="orientation|keyboard|keyboardHidden|screenSize|screenLayout|uiMode" />
         <activity android:name=".Activities.Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

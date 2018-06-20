@@ -24,6 +24,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jsancho.pedidos.Activities.DetalleTarea;
 import com.example.jsancho.pedidos.Objetos.Foto;
 import com.example.jsancho.pedidos.R;
 
@@ -50,6 +51,8 @@ public class ListaFotosAdapter extends ArrayAdapter<Foto> {
     //GPS...
     private LocationManager locationManager;
 
+    //Ha cambiado...
+    private boolean haCambiado;
 
     //Objeto Foto
     private String imagen = "-";
@@ -70,6 +73,7 @@ public class ListaFotosAdapter extends ArrayAdapter<Foto> {
         super(context, -1, values);
         this.context = context;
         this.values = values;
+        this.haCambiado = false;
     }
     public View getView(final int position, View convertView, ViewGroup parent) {
 
@@ -112,6 +116,7 @@ public class ListaFotosAdapter extends ArrayAdapter<Foto> {
         categorias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+
                 if (pos == 0) {
                     ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context, R.array.sub1, android.R.layout.simple_spinner_item);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -172,6 +177,7 @@ public class ListaFotosAdapter extends ArrayAdapter<Foto> {
         subcategorias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int po, long id) {
+
                 subcategoria = subcategorias.getItemAtPosition(po).toString();
                 values.get(position).setSubcategoria(subcategoria);
             }
@@ -187,6 +193,7 @@ public class ListaFotosAdapter extends ArrayAdapter<Foto> {
         borrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                haCambiado = true;
                 remove(getItem(position));
                 notifyDataSetChanged();
             }
@@ -195,6 +202,7 @@ public class ListaFotosAdapter extends ArrayAdapter<Foto> {
         descripcion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                haCambiado = true;
                 final EditText e = new EditText(context);
                 e.setHint("Descripción aquí...");
 
@@ -202,7 +210,7 @@ public class ListaFotosAdapter extends ArrayAdapter<Foto> {
                 alertdialogobuilder
                         .setTitle("Descripción")
                         .setView(e)
-                        .setCancelable(false)
+                        .setCancelable(true)
                         .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -219,7 +227,7 @@ public class ListaFotosAdapter extends ArrayAdapter<Foto> {
         });
 
         //----------Fecha y hora de la foto----------\\
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-dd-MM", Locale.getDefault());
         Date date = new Date();
         fecha = dateFormat.format(date);
 
@@ -246,9 +254,44 @@ public class ListaFotosAdapter extends ArrayAdapter<Foto> {
             mensajeDeAlertaGPS();
 
         } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            getLocation();
-        }
 
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
+                    (context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                //ActivityCompat.requestPermissions(, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
+            } else {
+                Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+                Location location1 = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+                Location location2 = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+
+                if (location != null) {
+                    double latti = location.getLatitude();
+                    double longi = location.getLongitude();
+                    lattitude = String.valueOf(latti);
+                    longitude = String.valueOf(longi);
+
+                } else if (location1 != null) {
+                    double latti = location1.getLatitude();
+                    double longi = location1.getLongitude();
+                    lattitude = String.valueOf(latti);
+                    longitude = String.valueOf(longi);
+
+                } else if (location2 != null) {
+                    double latti = location2.getLatitude();
+                    double longi = location2.getLongitude();
+                    lattitude = String.valueOf(latti);
+                    longitude = String.valueOf(longi);
+
+                } else {
+                    //Toast.makeText(context, "Imposible localizar tu posición", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        }
 
         //----------INSERTAR INFORMACIÓN EN OBJETO FOTO ANTES DE VOLVER----------\\
 
@@ -286,43 +329,10 @@ public class ListaFotosAdapter extends ArrayAdapter<Foto> {
         alert.show();
     }
 
-    private void getLocation() {
-
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
-                (context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            //ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
-
-        } else {
-            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-            Location location1 = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-            Location location2 = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-
-            if (location != null) {
-                double latti = location.getLatitude();
-                double longi = location.getLongitude();
-                lattitude = String.valueOf(latti);
-
-            } else if (location1 != null) {
-                double latti = location1.getLatitude();
-                double longi = location1.getLongitude();
-                lattitude = String.valueOf(latti);
-                longitude = String.valueOf(longi);
-
-            } else if (location2 != null) {
-                double latti = location2.getLatitude();
-                double longi = location2.getLongitude();
-                lattitude = String.valueOf(latti);
-                longitude = String.valueOf(longi);
-
-            } else {
-                Toast.makeText(context, "Imposible localizar tu posición", Toast.LENGTH_SHORT).show();
-
-            }
-        }
+    public boolean isHaCambiado() {
+        return haCambiado;
     }
-
+    public void setHaCambiado(boolean haCambiado){
+        this.haCambiado = haCambiado;
+    }
 }

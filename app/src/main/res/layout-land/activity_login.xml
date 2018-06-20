@@ -19,9 +19,8 @@
         <EditText
             android:id="@+id/loginEmail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:layout_weight="2"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:backgroundTint="@android:color/white"
             android:drawableLeft="@android:drawable/ic_dialog_email"
             android:drawablePadding="6dp"
@@ -30,16 +29,13 @@
             android:inputType="textEmailAddress"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white"
-            android:textSize="24sp"
-            tools:layout_editor_absoluteX="72dp"
-            tools:layout_editor_absoluteY="121dp" />
+            android:textSize="24sp" />
 
         <EditText
             android:id="@+id/loginPassword"
             android:layout_width="match_parent"
-            android:layout_height="57dp"
-            android:layout_margin="20dp"
-            android:layout_weight="2"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:backgroundTint="@android:color/white"
             android:drawableLeft="@android:drawable/ic_lock_idle_lock"
             android:drawablePadding="6dp"
@@ -48,20 +44,16 @@
             android:inputType="textPassword"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white"
-            android:textSize="24sp"
-            tools:layout_editor_absoluteX="72dp"
-            tools:layout_editor_absoluteY="197dp" />
+            android:textSize="24sp" />
 
         <Button
             android:id="@+id/btnLogin"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.7"
             android:background="@color/AzulBootstrap"
-            android:paddingBottom="20dp"
-            android:paddingLeft="50dp"
-            android:paddingRight="50dp"
-            android:paddingTop="20dp"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
             android:text="Login"
             android:textColor="@android:color/white"
             android:textSize="24sp" />
