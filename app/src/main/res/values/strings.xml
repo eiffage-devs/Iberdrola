@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Pedidos</string>
+    <string name="app_name">Eiffage Energía Compañías</string>
     <string name="urlBase">http://82.223.65.75:8000/</string>
     <string name="urlLogin">api_user/autenticar.json</string>
     <string name="urlCheck">api_check_user/check_token.json</string>
@@ -7,6 +7,12 @@
     <string name="urlLineasPedido">api_iberdrola/getLineasPedidoIBE/p/</string>
     <string name="urlEnviarFoto">/api_iberdrola/creaIBE/fotos_IB</string>
     <string name="urlFinalizarTarea">api_iberdrola/finTareaIBE/tarea</string>
+    <string name="urlDocumentos">api_iberdrola/getDocumentosPedidoIBE/p/</string>
+    <string name="urlListaAverias">api_iberdrola/getListaAveriasIBE/c/</string>
+    <string name="urlGetDatosUsuario">api_iberdrola/getDatosUsuario/u/</string>
+    <string name="urlCrearAveria">api_iberdrola/creaAveriaIBE/averia</string>
+    <string name="urlTraspasarTarea">api_iberdrola/AsignaTareaIBE/tarea/</string>
+    <string name="urlTareasTerminadas">api_iberdrola/getListaTareasTerminadasUsuarioIBE</string>
 
     <string-array name="categorias">
         <item>1. Centros de Transformación</item>
@@ -58,7 +64,7 @@
         <item>b. Ensayos localización averías</item>
         <item>c. Paso aéreo subterráneo - BT</item>
         <item>d. Paso aéreo subterráneo MT/AT</item>
-        <item>e. Retidada 7 desmontaje de cable</item>
+        <item>e. Retirada 7 desmontaje de cable</item>
         <item>f. Tendido RSBT</item>
         <item>g. Tendido RSMT/AT</item>
         <item>h. Terminaciones/conectores/empalmes RSBT</item>

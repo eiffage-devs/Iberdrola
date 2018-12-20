@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="20dp"
-    android:background="#ddd"
+    android:background="@color/NegroBootstrap"
     android:paddingLeft="20dp"
     android:paddingRight="20dp">
 
     <ImageView
-        android:id="@+id/imagenItem"
+        android:id="@+id/imagenFoto"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_margin="5dp"
@@ -22,60 +22,65 @@
         android:id="@+id/btnBorrar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/imagenItem"
-        android:layout_alignTop="@+id/btnDescripcion"
+        android:layout_alignStart="@+id/imagenFoto"
+        android:layout_alignTop="@+id/btnEditar"
         android:background="#dc3545"
         android:padding="5dp"
         android:text="Borrar"
         android:textColor="@android:color/white" />
 
-    <Spinner
-        android:id="@+id/spinner"
+    <TextView
+        android:id="@+id/txtSubcategoria"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/imagenItem"
-        android:layout_margin="15dp"
-        android:background="@android:color/white" />
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtCategoria"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textAlignment="center"/>
 
-    <Spinner
-        android:id="@+id/spinner2"
+    <TextView
+        android:id="@+id/txtCategoria"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/spinner"
-        android:layout_margin="15dp"
-        android:background="@android:color/white" />
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imagenFoto"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
 
     <Button
-        android:id="@+id/btnDescripcion"
+        android:id="@+id/btnEditar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/txtdesc"
         android:layout_marginEnd="0dp"
         android:layout_marginTop="20dp"
-        android:background="#343a40"
+        android:background="@android:color/white"
         android:padding="5dp"
-        android:text="Descripción"
-        android:textColor="@android:color/white" />
+        android:text="Editar"
+        android:textColor="@color/NegroBootstrap" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="2dp"
+        android:layout_below="@id/spinner2"
         android:layout_centerHorizontal="true"
-        android:background="#333"
-        android:layout_below="@id/spinner2"/>
+        android:background="#333" />
 
     <TextView
         android:id="@+id/txtdesc"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/spinner2"
+        android:layout_below="@id/txtSubcategoria"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:textColor="@android:color/black"
-        android:textSize="18sp" />
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textAlignment="center"/>
 
 </RelativeLayout>

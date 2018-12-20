@@ -13,14 +13,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/imageView9"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            app:srcCompat="@drawable/logo_blanco" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -128,7 +120,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentRight="true"
                     android:adjustViewBounds="true"
-                    app:srcCompat="@drawable/tareas" />
+                    app:srcCompat="@drawable/mistareas" />
 
                 <TextView
                     android:id="@+id/textView25"
@@ -181,7 +173,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentRight="true"
                     android:adjustViewBounds="true"
-                    app:srcCompat="@drawable/pedidos" />
+                    app:srcCompat="@drawable/mispedidos" />
 
                 <TextView
                     android:id="@+id/textView27"
@@ -213,44 +205,43 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_margin="20dp"
                 android:layout_weight="50"
-                android:alpha="0"
+                android:onClick="misAverias"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/imageView11"
+                    android:id="@+id/imageView12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentRight="true"
                     android:adjustViewBounds="true"
-                    app:srcCompat="@drawable/pedidos" />
+                    app:srcCompat="@drawable/misaverias" />
 
                 <TextView
-                    android:id="@+id/textView27"
+                    android:id="@+id/textView30"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_below="@id/imageView11"
+                    android:layout_below="@id/imageView12"
                     android:background="@android:color/background_light"
                     android:gravity="left"
                     android:padding="10dp"
-                    android:text="Mis pedidos"
+                    android:text="Mis averías"
                     android:textColor="@android:color/black"
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/textView28"
+                    android:id="@+id/textView31"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/textView27"
+                    android:layout_below="@id/textView30"
                     android:background="@android:color/background_light"
                     android:paddingBottom="3dp"
                     android:paddingLeft="10dp"
                     android:paddingTop="3dp"
-                    android:text="Documentación de pedidos asociados a tareas"
+                    android:text="Creación de nuevas averías y gestión de averías activas"
                     android:textColor="@android:color/black" />
 
             </RelativeLayout>

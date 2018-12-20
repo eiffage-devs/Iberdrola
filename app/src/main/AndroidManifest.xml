@@ -1,25 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.jsancho.pedidos">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.eiffage.companias">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:protectionLevel="signature" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:protectionLevel="signature" />
 
-    <uses-feature android:name="android.hardware.camera2" />
+    <!-- <uses-feature android:name="android.hardware.camera2" /> -->
     <uses-feature android:name="android.hardware.camera.any" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/icono_companias"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".Activities.DetalleTarea"
-            android:label="Informes"
-            android:configChanges="orientation|keyboard|keyboardHidden|screenSize|screenLayout|uiMode" />
+            android:configChanges="orientation|keyboard|keyboardHidden|screenSize|screenLayout|uiMode"
+            android:label="Informes" />
         <activity android:name=".Activities.Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,15 +41,46 @@
         </activity>
         <activity android:name=".Activities.Menu" />
         <activity android:name=".Activities.CerrarSesion" />
-        <activity android:name=".Activities.MisTareas" />
-        <activity android:name=".Activities.DetallePedido" />
+        <activity
+            android:name=".Activities.MisTareas"
+            android:configChanges="orientation|keyboard|keyboardHidden|screenSize|screenLayout|uiMode" />
         <activity android:name=".Activities.MisPedidos" />
         <activity android:name=".Activities.LineasPedido">
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable">
-            </meta-data>
+                android:resource="@xml/searchable" />
         </activity>
+        <activity
+            android:name=".Activities.Documentacion"
+            android:configChanges="screenLayout" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.eiffage.companias"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+        <provider
+            android:name=".Objetos.MyProvider"
+            android:authorities="com.eiffage.companias"
+            android:exported="false" />
+
+        <activity android:name=".Activities.FotoPantallaCompleta" />
+        <activity android:name=".Activities.PDFViewer" />
+        <activity android:name=".Activities.MisAverias" />
+        <activity
+            android:name=".Activities.CrearAveria"
+            android:label="Crear nueva avería" />
+        <activity android:name=".Activities.DelegarTarea" />
+        <activity android:name=".DetalleTareaV2" />
+        <activity android:name=".Activities.TareasAverias" />
+        <activity android:name=".DocumentacionGeneral" />
+        <activity android:name=".Activities.NuevaFoto" />
+        <activity android:name=".Activities.TareasTerminadas" />
+        <activity android:name=".Activities.DocumentacionPedidos"></activity>
     </application>
 
 </manifest>

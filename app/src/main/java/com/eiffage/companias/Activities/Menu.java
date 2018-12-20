@@ -1,0 +1,177 @@
+package com.eiffage.companias.Activities;
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.eiffage.companias.DocumentacionGeneral;
+import com.eiffage.companias.Objetos.Usuario;
+import com.eiffage.companias.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class Menu extends AppCompatActivity {
+
+    TextView txtusuario, txtempresa;
+    Usuario miUsuario;
+    static String urlCheck;
+
+    @Override
+    public boolean onCreateOptionsMenu(android.view.Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.docGeneral:
+                documentacionGeneral();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_menu);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.custom_logo);
+
+
+
+        Intent intent = getIntent();
+        try{
+            miUsuario = intent.getParcelableExtra("miUsuario");
+
+            txtusuario = findViewById(R.id.txtusuariomenu);
+            txtempresa = findViewById(R.id.txtempresamenu);
+
+            txtusuario.setText(miUsuario.getEmail());
+            txtempresa.setText(miUsuario.getEmpresa());
+        }
+        catch (NullPointerException e){
+            e.printStackTrace();
+        }
+
+
+        urlCheck = getResources().getString(R.string.urlBase) + getResources().getString(R.string.urlCheck);
+        comprobarDatos();
+    }
+
+    //----------Lógica de los botones de la activity----------\\
+
+    public void datosUsuario(View v){
+        Intent intent = new Intent(this, CerrarSesion.class);
+        intent.putExtra("miUsuario", miUsuario);
+        startActivity(intent);
+    }
+
+    public void misTareas(View v){
+        Intent intent = new Intent(this, MisTareas.class);
+        intent.putExtra("miUsuario", miUsuario);
+        intent.putExtra("filtradoPedido", "todo");
+        startActivity(intent);
+    }
+
+    public void misPedidos(View v){
+        Intent intent = new Intent(this, MisPedidos.class);
+        intent.putExtra("miUsuario", miUsuario);
+        startActivity(intent);
+    }
+
+    public void misAverias(View v){
+        Intent intent = new Intent(this, MisAverias.class);
+        intent.putExtra("miUsuario", miUsuario);
+        startActivity(intent);
+    }
+
+    //----------Comprobación de seguridad de la activity----------\\
+
+    public void comprobarDatos(){
+        SharedPreferences myPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+        final String token = myPrefs.getString("token", "Sin valor");
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest sr = new StringRequest(Request.Method.GET, urlCheck,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+
+                            JSONObject job=new JSONObject(response);
+                            String email=job.getString("email");
+                            String empresa=job.getString("empresa");
+                            String nombre=job.getString("nombre");
+                            String delegacion=job.getString("delegacion");
+                            String cod_recurso=job.getString("cod_recurso");
+                            miUsuario = new Usuario(token, email, empresa, nombre, delegacion, cod_recurso);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Toast.makeText(Menu.this, "Estás trabajando sin conexión", Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                params.put("Authorization", "Bearer " + token);
+
+                return params;
+            }
+        };
+        queue.add(sr);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        SharedPreferences myPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+        String tokenGuardado = myPrefs.getString("token", "Sin valor");
+        if(tokenGuardado.equals("Sin valor")){
+
+            Intent intent = new Intent(Menu.this, Login.class);
+            startActivity(intent);
+            finish();
+        }
+        else {
+            comprobarDatos();
+        }
+    }
+
+    public void documentacionGeneral(){
+        Intent i = new Intent(Menu.this, DocumentacionGeneral.class);
+        startActivity(i);
+    }
+}

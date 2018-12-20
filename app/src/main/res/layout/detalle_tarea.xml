@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fffff1"
-    tools:context=".Activities.DetalleTarea">
+    tools:context=".Activities.DetalleTarea"
+    android:id="@+id/scrollTarea">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,7 +14,7 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/btnDescargar"
+            android:id="@+id/btnDocumentacion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -21,8 +22,29 @@
             android:text="Documentación"
             android:textColor="@android:color/white" />
 
+        <Button
+            android:id="@+id/btnTraspasar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginRight="10dp"
+            android:background="#ffc107"
+            android:onClick="traspasar"
+            android:padding="5dp"
+            android:text="traspasar tarea "
+            android:textColor="@android:color/white" />
+
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/txtCreadaPor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:text="Tarea creada por: "
+            android:textColor="#343a40"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/txtCodRecurso"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
@@ -48,7 +70,7 @@
                 app:srcCompat="@android:drawable/ic_menu_send" />
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/txtEmpresa"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
@@ -166,7 +188,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:gravity="center_vertical"
-                android:text="Contrato Marco"
+                android:text="Fecha fin MECO"
                 android:textColor="#343a40" />
 
             <TextView
@@ -190,49 +212,12 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:adjustViewBounds="false"
-                app:srcCompat="@android:drawable/ic_menu_mylocation" />
-
-            <TextView
-                android:id="@+id/textView14"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:gravity="center_vertical"
-                android:text="Localización"
-                android:textColor="#343a40" />
-
-            <TextView
-                android:id="@+id/localizacionPedidoDT"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:gravity="center_vertical"
-                android:text="-9.2221, 5.12313"
-                android:textAlignment="center"
-                android:textColor="#343a40" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp"
-            android:orientation="horizontal">
-
-            <ImageView
                 android:id="@+id/imageView5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:adjustViewBounds="false"
-                app:srcCompat="@android:drawable/ic_menu_myplaces" />
+                app:srcCompat="@android:drawable/ic_menu_mylocation" />
 
             <TextView
                 android:id="@+id/textView16"
@@ -279,13 +264,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <ListView
+            <com.eiffage.companias.ExpandableHeightListView
                 android:id="@+id/listaFotos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp"
-                android:dividerHeight="20dp"></ListView>
+                android:divider="@color/NegroBootstrap"
+                android:dividerHeight="20dp"
+                android:isScrollContainer="false"
+                android:scrollbars="none"></com.eiffage.companias.ExpandableHeightListView>
 
         </LinearLayout>
 
@@ -306,7 +292,6 @@
             android:background="@color/AzulBootstrap"
             android:drawableTop="@android:drawable/ic_menu_save"
             android:gravity="center"
-            android:onClick="guardarInforme"
             android:text="Guardar fotos"
             android:textAlignment="center"
             android:textColor="@android:color/white" />
