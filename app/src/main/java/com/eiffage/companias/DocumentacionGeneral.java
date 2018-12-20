@@ -1,15 +1,20 @@
 package com.eiffage.companias;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.StrictMode;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +23,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -44,11 +50,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.regex.Pattern;
 
 public class DocumentacionGeneral extends AppCompatActivity {
@@ -56,26 +64,50 @@ public class DocumentacionGeneral extends AppCompatActivity {
     private static final String URL_Actualizar_Documentos = "http://192.168.97.198:8000/eiffage_intranet_2/api_iberdrola/getDocumentosGeneralesPedidoIBE";
     ProgressDialog progressDialog;
     SharedPreferences sp;
-    String token;
+    String token, delegacion;
     ArrayList<Documento> documentos;
     ListView listaDocs;
     MySqliteOpenHelper mySqliteOpenHelper;
     SQLiteDatabase db;
+    TextView ultimaActualizacion;
+
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+    //
+    //      Método para usar flecha de atrás en Action Bar
+    //
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_documentacion_general);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Documentación general");
+
+        listaDocs = findViewById(R.id.listaDocsGeneral);
+        ultimaActualizacion = findViewById(R.id.ultimaActualizacion);
+
+        mostrarUltimaActualizacion();
 
         sp = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
         token = sp.getString("token", "Sin valor");
 
+        documentos = new ArrayList<>();
+
         mySqliteOpenHelper = new MySqliteOpenHelper(DocumentacionGeneral.this);
         db = mySqliteOpenHelper.getWritableDatabase();
 
-        documentos = new ArrayList<>();
-
-        listaDocs = findViewById(R.id.listaDocsGeneral);
         llenarArrayListLocal();
+
 
         listaDocs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -87,6 +119,8 @@ public class DocumentacionGeneral extends AppCompatActivity {
                     startActivity(i);
                 }
                 else {
+
+                    if(verifyStoragePermissions(DocumentacionGeneral.this)){
                         String sourcePath = documentos.get(position).getRutaLocal();
                         File source = new File(sourcePath);
 
@@ -109,15 +143,20 @@ public class DocumentacionGeneral extends AppCompatActivity {
                         intent.setDataAndType(data, mimetype);
                         Intent i = Intent.createChooser(intent, "Elige un lector");
                         startActivity(i);
+                    }
 
                 }
             }
         });
 
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+        builder.detectFileUriExposure();
+
     }
 
     public void actualizarDocumentos(View view) {
-        documentos = new ArrayList<>();
+
         muestraLoader("Actualizando documentos...");
         RequestQueue queue = Volley.newRequestQueue(this);
         StringRequest sr = new StringRequest(Request.Method.GET, URL_Actualizar_Documentos,
@@ -130,17 +169,21 @@ public class DocumentacionGeneral extends AppCompatActivity {
                             String content = jsonObject.getString("content");
 
                             JSONArray job = new JSONArray(content);
+                            documentos = new ArrayList<>();
                             for (int i = 0; i < job.length(); i++) {
                                 JSONObject actual = (JSONObject) job.get(i);
 
                                 String ruta = actual.getString("ruta");
                                 String nombreFichero = actual.getString("fichero");
-                                String delegacion = actual.getString("delegacion");
+                                delegacion = actual.getString("delegacion");
+                                SharedPreferences.Editor editor = getSharedPreferences("myPrefs", MODE_PRIVATE).edit();
+                                editor.putString("delegacion", delegacion);
+                                editor.apply();
 
                                 String [] parts = actual.get("fichero").toString().split(Pattern.quote("."));
                                 String ext = parts[1];
 
-                                Documento doc = new Documento("Docu_General_IBE", delegacion, generarNombreFicheroPDF() + "." + ext, ruta, nombreFichero);
+                                Documento doc = new Documento(delegacion, "Docu_General_IBE", generarNombreFicheroPDF() + "." + ext, ruta, nombreFichero);
                                 documentos.add(doc);
                             }
 
@@ -157,6 +200,10 @@ public class DocumentacionGeneral extends AppCompatActivity {
 
                             // Assign adapter to ListView
                             listaDocs.setAdapter(adapter);
+
+                            if(isOnline(DocumentacionGeneral.this)) {
+                                mySqliteOpenHelper.borrarFicherosDePedido(db, delegacion, "Docu_General_IBE");
+                            }
 
                             peticionesDescargas(0);
 
@@ -205,7 +252,7 @@ public class DocumentacionGeneral extends AppCompatActivity {
                                         String name = actual.getNombreFichero();
                                         String rutaLocal = actual.getRutaLocal();
 
-                                        mySqliteOpenHelper.insertarDocumento(db, actual.getCod_pedido(), getFilesDir().getAbsolutePath() + "/" + actual.getRutaLocal(), name, actual.getCategoria());
+                                        mySqliteOpenHelper.insertarDocumento(db, delegacion, getFilesDir().getAbsolutePath() + "/" + rutaLocal, name, "Docu_General_IBE");
 
                                         FileOutputStream outputStream;
                                         outputStream = openFileOutput(actual.getRutaLocal(), Context.MODE_PRIVATE);
@@ -214,6 +261,8 @@ public class DocumentacionGeneral extends AppCompatActivity {
 
                                         if(pos == finalDocumentos.size() - 1){
                                             llenarArrayListLocal();
+                                            guardarActualizacion();
+                                            mensajeAlert("Documentos actualizados");
                                             progressDialog.dismiss();
                                         }
                                         else {
@@ -269,21 +318,30 @@ public class DocumentacionGeneral extends AppCompatActivity {
     }
 
     public void llenarArrayListLocal() {
-        documentos = mySqliteOpenHelper.getDocumentos(db, "Docu_General_IBE", "DocTecnica");
+        SharedPreferences sp = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+        delegacion = sp.getString("delegacion", "");
+
+        documentos = mySqliteOpenHelper.getDocumentos(db, delegacion, "Docu_General_IBE");
         mostrarFicherosLocales();
+
     }
 
     public void mostrarFicherosLocales() {
 
         try{
-            List<String> listaDocs = new ArrayList<>();
+            List<String> lista = new ArrayList<>();
             for(int i=0; i<documentos.size(); i++){
-                listaDocs.add(documentos.get(i).getNombreFichero());
+                lista.add(documentos.get(i).getNombreFichero());
             }
 
-            String[] values = new String[listaDocs.size()];
-            listaDocs.toArray(values);
+            String[] values = new String[lista.size()];
+            lista.toArray(values);
 
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                    android.R.layout.simple_list_item_1, android.R.id.text1, values);
+
+            // Assign adapter to ListView
+            listaDocs.setAdapter(adapter);
 
         }catch (NullPointerException e){
             e.printStackTrace();
@@ -330,6 +388,69 @@ public class DocumentacionGeneral extends AppCompatActivity {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
         progressDialog.setCancelable(true);
         progressDialog.show();
+    }
+
+    public boolean verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+            return false;
+        }
+        return true;
+    }
+
+
+
+    public void guardarActualizacion(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+        Date date = new Date();
+        String fecha = dateFormat.format(date);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("CET"));
+        String tempHora = "" + calendar.get(Calendar.HOUR_OF_DAY);
+        if (tempHora.length() == 1) {
+            tempHora = "0" + tempHora;
+        }
+        String tempMin = "" + calendar.get(Calendar.MINUTE);
+        if (tempMin.length() == 1) {
+            tempMin = "0" + tempMin;
+        }
+        String tempSeg = "" + calendar.get(Calendar.SECOND);
+        if (tempSeg.length() == 1) {
+            tempSeg = "0" + tempSeg;
+        }
+
+        String hora = tempHora + ":" + tempMin + ":" + tempSeg;
+
+        ultimaActualizacion  = findViewById(R.id.ultimaActualizacion);
+        ultimaActualizacion.setText("Última actualización: AHORA");
+        ultimaActualizacion.setBackgroundColor(getResources().getColor(R.color.VerdeBootstrap));
+        SharedPreferences.Editor editor = getSharedPreferences("myPrefs", MODE_PRIVATE).edit();
+        editor.putString("ultimaActualizacionDocGeneralFecha", fecha);
+        editor.putString("ultimaActualizacionDocGeneralHora", hora);
+        editor.apply();
+
+    }
+
+    public void mostrarUltimaActualizacion(){
+        SharedPreferences myPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+        String f = myPrefs.getString("ultimaActualizacionDocGeneralFecha", "-");
+        String s = myPrefs.getString("ultimaActualizacionDocGeneralHora", "-");
+        ultimaActualizacion = findViewById(R.id.ultimaActualizacion);
+        ultimaActualizacion.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_light));
+        ultimaActualizacion  = findViewById(R.id.ultimaActualizacion);
+        if(!f.equals("-") && !s.equals("-")){
+            ultimaActualizacion.setText("Última actualización: " + f + ", " + s);
+        }
+
     }
 
 }
