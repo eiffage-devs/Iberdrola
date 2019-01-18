@@ -61,7 +61,7 @@ import java.util.regex.Pattern;
 
 public class DocumentacionGeneral extends AppCompatActivity {
 
-    private static final String URL_Actualizar_Documentos = "http://192.168.97.198:8000/eiffage_intranet_2/api_iberdrola/getDocumentosGeneralesPedidoIBE";
+    private static final String URL_Actualizar_Documentos = "http://82.223.65.75:8000/api_iberdrola/getDocumentosGeneralesPedidoIBE";
     ProgressDialog progressDialog;
     SharedPreferences sp;
     String token, delegacion;
@@ -112,13 +112,6 @@ public class DocumentacionGeneral extends AppCompatActivity {
         listaDocs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(documentos.get(position).getNombreFichero().contains(".PDF") || documentos.get(position).getNombreFichero().contains(".pdf")){
-                    String rutaLocal = documentos.get(position).getRutaLocal();
-                    Intent i = new Intent(DocumentacionGeneral.this, PDFViewer.class);
-                    i.putExtra("rutaFichero", rutaLocal);
-                    startActivity(i);
-                }
-                else {
 
                     if(verifyStoragePermissions(DocumentacionGeneral.this)){
                         String sourcePath = documentos.get(position).getRutaLocal();
@@ -145,7 +138,7 @@ public class DocumentacionGeneral extends AppCompatActivity {
                         startActivity(i);
                     }
 
-                }
+
             }
         });
 
@@ -163,7 +156,8 @@ public class DocumentacionGeneral extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        progressDialog.dismiss();
+
+                        Log.d("Respuesta docs general", response);
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             String content = jsonObject.getString("content");
@@ -321,6 +315,7 @@ public class DocumentacionGeneral extends AppCompatActivity {
         SharedPreferences sp = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
         delegacion = sp.getString("delegacion", "");
 
+        documentos = new ArrayList<>();
         documentos = mySqliteOpenHelper.getDocumentos(db, delegacion, "Docu_General_IBE");
         mostrarFicherosLocales();
 
@@ -340,7 +335,6 @@ public class DocumentacionGeneral extends AppCompatActivity {
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                     android.R.layout.simple_list_item_1, android.R.id.text1, values);
 
-            // Assign adapter to ListView
             listaDocs.setAdapter(adapter);
 
         }catch (NullPointerException e){

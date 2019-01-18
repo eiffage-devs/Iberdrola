@@ -218,7 +218,8 @@ public class DetalleTarea extends AppCompatActivity {
 
         ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
 
-
+        ScrollView scrollView = findViewById(R.id.scrollTarea);
+        scrollView.smoothScrollTo(0,0);
     }
 
     private File createImageFile() throws IOException {
@@ -358,12 +359,12 @@ public class DetalleTarea extends AppCompatActivity {
                 String urlFoto = data.getStringExtra("urlFoto");
 
                 Foto nueva = new Foto(nuevaFoto, desc, categ, subcateg, fecha, hora, coord, idTarea, fecha+hora, urlFoto);
-                myPictures.add(nueva);
+                myPictures.add(0, nueva);
                 listaFotosAdapter = new ListaFotosAdapter(this, myPictures);
                 listaFotos.setAdapter(listaFotosAdapter);
-                int moverVista = listaFotos.getBottom();
+                //int moverVista = listaFotos.getBottom();
                 ScrollView scrollView = findViewById(R.id.scrollTarea);
-                scrollView.scrollTo(0, moverVista + (photoH * 2));
+                scrollView.smoothScrollTo(0, 0);
                 guardarInforme();
             }
         }
@@ -409,6 +410,8 @@ public class DetalleTarea extends AppCompatActivity {
         c.close();
         listaFotosAdapter = new ListaFotosAdapter(this, myPictures);
         listaFotos.setAdapter(listaFotosAdapter);
+        ScrollView scrollView = findViewById(R.id.scrollTarea);
+        scrollView.fullScroll(ScrollView.FOCUS_UP);
 
     }
 

@@ -65,9 +65,9 @@ public class ListaFotosAdapter extends ArrayAdapter<Foto> {
         final TextView subcategoria = rowView.findViewById(R.id.txtSubcategoria);
         final TextView desc = rowView.findViewById(R.id.txtdesc);
 
-        categoria.setText("Área:\n" + values.get(position).getCategoria());
-        subcategoria.setText("Subárea:\n" + values.get(position).getSubcategoria());
-        desc.setText("Descripción:\n" + values.get(position).getDescripcion());
+        categoria.setText("Área: " + values.get(position).getCategoria());
+        subcategoria.setText("Subárea: " + values.get(position).getSubcategoria());
+        desc.setText("Descripción: " + values.get(position).getDescripcion());
 
 
         //----------Funcionalidad botones borrar y descripción----------\\

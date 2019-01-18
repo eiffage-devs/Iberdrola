@@ -25,7 +25,7 @@
     <ListView
         android:id="@+id/listaAverias"
         android:layout_width="match_parent"
-        android:layout_height="430dp"
+        android:layout_height="match_parent"
         android:layout_below="@+id/ultimaActualizacionAverias"
         android:layout_marginBottom="50dp"
         android:divider="#343a40"

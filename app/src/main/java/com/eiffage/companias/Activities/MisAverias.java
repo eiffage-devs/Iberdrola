@@ -72,8 +72,6 @@ public class MisAverias extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
-
         mySqliteOpenHelper = new MySqliteOpenHelper(this);
         myDataBase = mySqliteOpenHelper.getWritableDatabase();
 
@@ -95,6 +93,7 @@ public class MisAverias extends AppCompatActivity {
             }
         });
         */
+        actualizarAverias();
         mostrarAveriasLocales();
         mostrarUltimaActualizacion();
     }
@@ -294,7 +293,7 @@ public class MisAverias extends AppCompatActivity {
     public void mensajeAlert(String message){
         AlertDialog.Builder alertdialogobuilder = new AlertDialog.Builder(this, R.style.MyDialogTheme);
         alertdialogobuilder
-                .setTitle("Mis tareas")
+                .setTitle("Mis averías")
                 .setMessage(message)
                 .setCancelable(true)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {

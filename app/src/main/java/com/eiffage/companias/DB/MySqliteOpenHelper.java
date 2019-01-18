@@ -11,13 +11,14 @@ import android.util.Log;
 import com.eiffage.companias.Objetos.Averia;
 import com.eiffage.companias.Objetos.Documento;
 
+import java.sql.SQLData;
 import java.util.ArrayList;
 
 public class MySqliteOpenHelper  extends SQLiteOpenHelper {
 
     Context context;
     private static final String DATABASE_NAME = "Pedidos";
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
 
 
     private static final String CREAR_TABLA_PEDIDO = "CREATE TABLE Pedido (" +
@@ -44,11 +45,13 @@ public class MySqliteOpenHelper  extends SQLiteOpenHelper {
     private static final String CREAR_TABLA_AVERIAS = "CREATE TABLE Averia ( " +
             "id INTEGER PRIMARY KEY AUTOINCREMENT, cod_averia TEXT, cod_recurso TEXT, descripcion TEXT, gestor TEXT, observaciones TEXT, fecha TEXT, localidad TEXT)";
 
+    private static final String CREAR_TABLA_EDITABLES = "CREATE TABLE Editable (" +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, rutaInterna TEXT, nombreQueSeMuestra TEXT, cod_pedido TEXT )";
+
     public MySqliteOpenHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
     }
-
     @Override
     public void onCreate(SQLiteDatabase db) {
 
@@ -57,6 +60,7 @@ public class MySqliteOpenHelper  extends SQLiteOpenHelper {
         db.execSQL(CREAR_TABLA_FOTO);
         db.execSQL(CREAR_TABLA_DOCUMENTOS);
         db.execSQL(CREAR_TABLA_AVERIAS);
+        db.execSQL(CREAR_TABLA_EDITABLES);
     }
 
     @Override
@@ -66,6 +70,7 @@ public class MySqliteOpenHelper  extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + "Foto");
         db.execSQL("DROP TABLE IF EXISTS " + "Documento");
         db.execSQL("DROP TABLE IF EXISTS " + "Averia");
+        db.execSQL("DROP TABLE IF EXISTS " + "Editable");
         this.onCreate(db);
     }
 
@@ -88,9 +93,48 @@ public class MySqliteOpenHelper  extends SQLiteOpenHelper {
 
 
 
+    public void insertarEditable(SQLiteDatabase db, String rutaInterna, String nombreQueSeMuestra,  String cod_pedido){
+        Cursor c = db.rawQuery("SELECT * FROM Editable WHERE cod_pedido LIKE '" + cod_pedido + "' AND nombreQueSeMuestra LIKE '" + nombreQueSeMuestra + "' AND rutaInterna LIKE '" + rutaInterna + "'", null);
+        if(c.getCount() == 0){
+            db.execSQL("INSERT OR REPLACE INTO Editable (rutaInterna, nombreQueSeMuestra, cod_pedido) VALUES ('" + rutaInterna + "','" + nombreQueSeMuestra + "','" + cod_pedido + "')");
+        }
+        Log.d("Editable", "Se ha insertado el documento: " + nombreQueSeMuestra);
+    }
 
+    public boolean hayEditables(SQLiteDatabase db, String cod_pedido){
+        Cursor c = db.rawQuery("SELECT * FROM Editable WHERE cod_pedido LIKE '" + cod_pedido + "'", null);
+        Log.d("Nº docs editados", c.getCount() + "");
+        if(c.getCount() > 0){
+            return true;
+        }
+        else return false;
+    }
 
+    public void borrarEditados(SQLiteDatabase db, String cod_pedido){
+        db.execSQL("DELETE FROM Editable WHERE cod_pedido LIKE '" + cod_pedido + "'");
+    }
 
+    public void borrarEditado(SQLiteDatabase db, String url_interna){
+        db.execSQL("DELETE FROM Editable WHERE rutaInterna LIKE '" + url_interna + "'");
+    }
+
+    public ArrayList<Documento> getEditables(SQLiteDatabase db, String cod_pedido){
+        ArrayList<Documento> actuales = new ArrayList<>();
+        Cursor c = db.rawQuery("SELECT * FROM Editable WHERE cod_pedido LIKE '" + cod_pedido + "'", null);
+        if(c.getCount() > 0){
+            c.moveToFirst();
+            do{
+                String rutaInterna = c.getString(1);
+                String nombreQueSeMuestra = c.getString(2);
+
+                actuales.add(new Documento(cod_pedido, "Editado", rutaInterna, "-", nombreQueSeMuestra));
+            }while(c.moveToNext());
+        }
+        c.close();
+        return actuales;
+
+        //id INTEGER PRIMARY KEY AUTOINCREMENT, rutaInterna TEXT, nombreQueSeMuestra TEXT, cod_pedido TEXT
+    }
 
 
 

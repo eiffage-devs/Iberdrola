@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -15,12 +16,17 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,6 +43,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.eiffage.companias.Adapters.GridAdapter;
+import com.eiffage.companias.Adapters.ListaEditablesAdapter;
 import com.eiffage.companias.DB.MySqliteOpenHelper;
 import com.eiffage.companias.Objetos.Documento;
 import com.eiffage.companias.Objetos.InputStreamVolleyRequest;
@@ -50,6 +57,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,29 +70,38 @@ import java.util.regex.Pattern;
 public class Documentacion extends AppCompatActivity {
 
     //Views
-    ListView listDocsTecnica, listPrevencion;
+    ListView listDocsTecnica, listPrevencion, listEditables, listEditados;
     GridView myGrid;
-    TextView txtDocTecnica, txtPrevencion;
+    TextView txtDocTecnica, txtPrevencion, txtEditables;
     LinearLayout txtFotos;
-    ImageView imgDocTecnica, imgPrevencion, arrowDocTecnica, arrowPrevencion, arrowFotos;
-    boolean visibleDocTecnica = false, visiblePrevencion = false, visibleFotos = false;
+    ImageView imgDocTecnica, imgPrevencion, imgEditables, arrowDocTecnica, arrowPrevencion, arrowEditables, arrowFotos;
+    boolean visibleDocTecnica = false, visiblePrevencion = false, visibleEditables = false,visibleFotos = false;
 
     //Traídos desde API
-    ArrayList<Documento> rDocTecnica, rPrevencion, rFotos;
+    ArrayList<Documento> rDocTecnica, rPrevencion, rFotos, rEditables, rEditados;
 
     //Traídos desde BBDD
-    ArrayList<Documento> docTecnica, prevencion;
+    ArrayList<Documento> docTecnica, prevencion, editables, editados;
 
     //Variables importantes
     String cod_pedido = "-";
     String token = "-";
     String cat = "-";
     ProgressDialog progressDialog;
-    boolean haPulsadoDocTecnica = false, haPulsadoPrevencion = false;
+    boolean haPulsadoDocTecnica = false, haPulsadoPrevencion = false, haPulsadoEditables = false;
 
     //Manejo de BBDD
     MySqliteOpenHelper mySqliteOpenHelper;
     SQLiteDatabase db;
+
+    //Editables
+    String origen;
+    String destino;
+    String nombreQueSeMuestra;
+    String ext = "pdf";
+    ListaEditablesAdapter editablesAdapter;
+
+    Button enviarEditables;
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -100,23 +117,34 @@ public class Documentacion extends AppCompatActivity {
 
         listDocsTecnica = findViewById(R.id.listaDocTecnica);
         listPrevencion = findViewById(R.id.listaPrevencion);
+        listEditables = findViewById(R.id.listaEditables);
+        listEditados = findViewById(R.id.listaEditados);
         myGrid = findViewById(R.id.gridFotos);
         txtDocTecnica = findViewById(R.id.txtDocTecnica);
         txtPrevencion = findViewById(R.id.txtPrevencion);
+        txtEditables = findViewById(R.id.txtEditables);
         txtFotos = findViewById(R.id.documentos3);
         imgDocTecnica = findViewById(R.id.imgDownloadDocTecnica);
         imgPrevencion = findViewById(R.id.imgDownloadPrevencion);
+        imgEditables = findViewById(R.id.imgDownloadEditables);
 
         arrowDocTecnica = findViewById(R.id.arrowDocTecnica);
         arrowPrevencion = findViewById(R.id.arrowPrevencion);
+        arrowEditables = findViewById(R.id.arrowEditables);
         arrowFotos = findViewById(R.id.arrowFotos);
+
+        enviarEditables = findViewById(R.id.enviarEditables);
 
         rDocTecnica = new ArrayList<>();
         rPrevencion = new ArrayList<>();
         rFotos = new ArrayList<>();
+        rEditables = new ArrayList<>();
+        rEditados = new ArrayList<>();
 
         docTecnica = new ArrayList<>();
         prevencion = new ArrayList<>();
+        editables = new ArrayList<>();
+        editados = new ArrayList<>();
 
         cod_pedido = getCod_pedido();
         token = getToken();
@@ -132,10 +160,13 @@ public class Documentacion extends AppCompatActivity {
 
         listDocsTecnica.setVisibility(View.GONE);
         listPrevencion.setVisibility(View.GONE);
+        listEditables.setVisibility(View.GONE);
+        listEditados.setVisibility(View.GONE);
         myGrid.setVisibility(View.GONE);
 
         arrowDocTecnica.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
         arrowPrevencion.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+        arrowEditables.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
         arrowFotos.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
 
         txtDocTecnica.setOnClickListener(new View.OnClickListener() {
@@ -146,16 +177,57 @@ public class Documentacion extends AppCompatActivity {
                     visibleDocTecnica = true;
                     listPrevencion.setVisibility(View.GONE);
                     visiblePrevencion = false;
+                    listEditables.setVisibility(View.GONE);
+                    listEditados.setVisibility(View.GONE);
+                    visibleEditables = false;
                     myGrid.setVisibility(View.GONE);
                     visibleFotos = false;
                     Log.d("DOC TECNICA", "VISIBLE");
                     arrowDocTecnica.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_up_float));
+                    arrowPrevencion.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowEditables.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowFotos.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
                 }
                 else {
                     listDocsTecnica.setVisibility(View.GONE);
                     visibleDocTecnica = false;
                     Log.d("DOC TECNICA", "INVISIBLE");
                     arrowDocTecnica.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowPrevencion.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowEditables.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowFotos.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                }
+            }
+        });
+
+        arrowDocTecnica.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!visibleDocTecnica){
+                    listDocsTecnica.setVisibility(View.VISIBLE);
+                    visibleDocTecnica = true;
+                    listPrevencion.setVisibility(View.GONE);
+                    visiblePrevencion = false;
+                    listEditables.setVisibility(View.GONE);
+                    listEditados.setVisibility(View.GONE);
+                    enviarEditables.setVisibility(View.GONE);
+                    visibleEditables = false;
+                    myGrid.setVisibility(View.GONE);
+                    visibleFotos = false;
+                    Log.d("DOC TECNICA", "VISIBLE");
+                    arrowDocTecnica.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_up_float));
+                    arrowPrevencion.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowEditables.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowFotos.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                }
+                else {
+                    listDocsTecnica.setVisibility(View.GONE);
+                    visibleDocTecnica = false;
+                    Log.d("DOC TECNICA", "INVISIBLE");
+                    arrowDocTecnica.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowPrevencion.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowEditables.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowFotos.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
                 }
             }
         });
@@ -168,16 +240,58 @@ public class Documentacion extends AppCompatActivity {
                     visiblePrevencion = true;
                     listDocsTecnica.setVisibility(View.GONE);
                     visibleDocTecnica = false;
+                    listEditables.setVisibility(View.GONE);
+                    listEditados.setVisibility(View.GONE);
+                    enviarEditables.setVisibility(View.GONE);
+                    visibleEditables = false;
                     myGrid.setVisibility(View.GONE);
                     visibleFotos = false;
                     Log.d("PREVENCION", "VISIBLE");
                     arrowPrevencion.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_up_float));
+                    arrowDocTecnica.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowEditables.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowFotos.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
                 }
                 else {
                     listPrevencion.setVisibility(View.GONE);
                     visiblePrevencion = false;
                     Log.d("PREVENCION", "INVISIBLE");
                     arrowPrevencion.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowDocTecnica.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowEditables.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowFotos.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                }
+            }
+        });
+
+        arrowPrevencion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!visiblePrevencion){
+                    listPrevencion.setVisibility(View.VISIBLE);
+                    visiblePrevencion = true;
+                    listDocsTecnica.setVisibility(View.GONE);
+                    visibleDocTecnica = false;
+                    listEditables.setVisibility(View.GONE);
+                    listEditados.setVisibility(View.GONE);
+                    enviarEditables.setVisibility(View.GONE);
+                    visibleEditables = false;
+                    myGrid.setVisibility(View.GONE);
+                    visibleFotos = false;
+                    Log.d("PREVENCION", "VISIBLE");
+                    arrowPrevencion.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_up_float));
+                    arrowDocTecnica.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowEditables.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowFotos.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                }
+                else {
+                    listPrevencion.setVisibility(View.GONE);
+                    visiblePrevencion = false;
+                    Log.d("PREVENCION", "INVISIBLE");
+                    arrowPrevencion.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowDocTecnica.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowEditables.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowFotos.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
                 }
             }
         });
@@ -192,14 +306,124 @@ public class Documentacion extends AppCompatActivity {
                     visibleDocTecnica = false;
                     listPrevencion.setVisibility(View.GONE);
                     visiblePrevencion = false;
+                    listEditables.setVisibility(View.GONE);
+                    listEditados.setVisibility(View.GONE);
+                    enviarEditables.setVisibility(View.GONE);
+                    visibleEditables = false;
                     Log.d("FOTOS", "VISIBLE");
                     arrowFotos.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_up_float));
+                    arrowPrevencion.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowEditables.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowDocTecnica.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
                 }
                 else {
                     myGrid.setVisibility(View.GONE);
                     visibleFotos = false;
                     Log.d("FOTOS", "INVISIBLE");
                     arrowFotos.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowPrevencion.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowEditables.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowDocTecnica.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                }
+            }
+        });
+
+        arrowFotos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!visibleFotos){
+                    myGrid.setVisibility(View.VISIBLE);
+                    visibleFotos = true;
+                    listDocsTecnica.setVisibility(View.GONE);
+                    visibleDocTecnica = false;
+                    listPrevencion.setVisibility(View.GONE);
+                    visiblePrevencion = false;
+                    listEditables.setVisibility(View.GONE);
+                    listEditados.setVisibility(View.GONE);
+                    enviarEditables.setVisibility(View.GONE);
+                    visibleEditables = false;
+                    Log.d("FOTOS", "VISIBLE");
+                    arrowFotos.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_up_float));
+                    arrowPrevencion.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowEditables.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowDocTecnica.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                }
+                else {
+                    myGrid.setVisibility(View.GONE);
+                    visibleFotos = false;
+                    Log.d("FOTOS", "INVISIBLE");
+                    arrowFotos.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowPrevencion.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowEditables.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowDocTecnica.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                }
+            }
+        });
+
+        txtEditables.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!visibleEditables){
+                    myGrid.setVisibility(View.GONE);
+                    visibleFotos = false;
+                    listDocsTecnica.setVisibility(View.GONE);
+                    visibleDocTecnica = false;
+                    listPrevencion.setVisibility(View.GONE);
+                    visiblePrevencion = false;
+                    listEditables.setVisibility(View.VISIBLE);
+                    listEditados.setVisibility(View.VISIBLE);
+                    enviarEditables.setVisibility(View.VISIBLE);
+                    visibleEditables = true;
+                    Log.d("EDITABLE", "VISIBLE");
+                    arrowFotos.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowPrevencion.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowEditables.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_up_float));
+                    arrowDocTecnica.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                }
+                else {
+                    listEditables.setVisibility(View.GONE);
+                    listEditados.setVisibility(View.GONE);
+                    enviarEditables.setVisibility(View.GONE);
+                    visibleEditables = false;
+                    Log.d("EDITABLE", "INVISIBLE");
+                    arrowFotos.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowPrevencion.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowEditables.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowDocTecnica.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                }
+            }
+        });
+
+        arrowEditables.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!visibleEditables){
+                    myGrid.setVisibility(View.GONE);
+                    visibleFotos = false;
+                    listDocsTecnica.setVisibility(View.GONE);
+                    visibleDocTecnica = false;
+                    listPrevencion.setVisibility(View.GONE);
+                    visiblePrevencion = false;
+                    listEditables.setVisibility(View.VISIBLE);
+                    listEditados.setVisibility(View.VISIBLE);
+                    enviarEditables.setVisibility(View.VISIBLE);
+                    visibleEditables = true;
+                    Log.d("EDITABLES", "VISIBLE");
+                    arrowFotos.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowPrevencion.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowEditables.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_up_float));
+                    arrowDocTecnica.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                }
+                else {
+                    listEditables.setVisibility(View.GONE);
+                    listEditados.setVisibility(View.GONE);
+                    enviarEditables.setVisibility(View.GONE);
+                    visibleEditables = false;
+                    Log.d("EDITABLES", "INVISIBLE");
+                    arrowFotos.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowPrevencion.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowEditables.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
+                    arrowDocTecnica.setImageDrawable(getResources().getDrawable(android.R.drawable.arrow_down_float));
                 }
             }
         });
@@ -207,14 +431,14 @@ public class Documentacion extends AppCompatActivity {
         listDocsTecnica.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(docTecnica.get(position).getNombreFichero().contains(".PDF") || docTecnica.get(position).getNombreFichero().contains(".pdf")){
+                /*if(docTecnica.get(position).getNombreFichero().contains(".PDF") || docTecnica.get(position).getNombreFichero().contains(".pdf")){
                     String rutaLocal = docTecnica.get(position).getRutaLocal();
                     Intent i = new Intent(Documentacion.this, PDFViewer.class);
                     i.putExtra("rutaFichero", rutaLocal);
                     startActivity(i);
                 }
                 else {
-
+*/
                     if(verifyStoragePermissions(Documentacion.this)){
                         String sourcePath = docTecnica.get(position).getRutaLocal();
                         File source = new File(sourcePath);
@@ -239,18 +463,84 @@ public class Documentacion extends AppCompatActivity {
                         Intent i = Intent.createChooser(intent, "Elige un lector");
                         startActivity(i);
                     }
-
+                    //Se guardan los documentos editados en --> /sdcard/PERMISO DE TRABAJO.pdf
                 }
-            }
+
         });
 
         listPrevencion.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String rutaLocal = prevencion.get(position).getRutaLocal();
+                /*String rutaLocal = prevencion.get(position).getRutaLocal();
                 Intent i = new Intent(Documentacion.this, PDFViewer.class);
                 i.putExtra("rutaFichero", rutaLocal);
                 startActivity(i);
+                */
+                if(verifyStoragePermissions(Documentacion.this)){
+                    String sourcePath = prevencion.get(position).getRutaLocal();
+                    File source = new File(sourcePath);
+
+                    String destinationPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + prevencion.get(position).getNombreFichero();
+                    File destination = new File(destinationPath);
+                    try
+                    {
+                        FileUtils.copyFile(source, destination);
+                    }
+                    catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+
+                    Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
+                    Uri data = Uri.fromFile(destination);
+                    String [] parts = prevencion.get(position).getNombreFichero().split(Pattern.quote("."));
+                    String ext = parts[1];
+                    String mimetype = android.webkit.MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext);
+                    intent.setDataAndType(data, mimetype);
+                    Intent i = Intent.createChooser(intent, "Elige un lector");
+                    startActivity(i);
+                }
+            }
+        });
+
+        listEditables.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                /*String rutaLocal = prevencion.get(position).getRutaLocal();
+                Intent i = new Intent(Documentacion.this, PDFViewer.class);
+                i.putExtra("rutaFichero", rutaLocal);
+                startActivity(i);
+                */
+                if(verifyStoragePermissions(Documentacion.this)){
+                    String sourcePath = editables.get(position).getRutaLocal();
+                    origen = sourcePath;
+                    File source = new File(sourcePath);
+
+                    String destinationPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + editables.get(position).getNombreFichero();
+                    destino = destinationPath;
+                    nombreQueSeMuestra = editables.get(position).getNombreFichero();
+                    File destination = new File(destinationPath);
+                    try
+                    {
+                        Log.d("ORIGEN", sourcePath);
+                        Log.d("DESTINO", destinationPath);
+
+                        FileUtils.copyFile(source, destination);
+                    }
+                    catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+
+                    Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
+                    Uri data = Uri.fromFile(destination);
+                    String [] parts = editables.get(position).getNombreFichero().split(Pattern.quote("."));
+                    ext = parts[1];
+                    String mimetype = android.webkit.MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext);
+                    intent.setDataAndType(data, mimetype);
+                    Intent i = Intent.createChooser(intent, "Elige un lector");
+                    startActivityForResult(i, 0);
+                }
             }
         });
 
@@ -306,6 +596,32 @@ public class Documentacion extends AppCompatActivity {
             }
         });
 
+        imgEditables.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imgEditables.setClickable(false);
+                imgEditables.setEnabled(false);
+                haPulsadoEditables = true;
+
+                progressDialog = new ProgressDialog(Documentacion.this);
+                progressDialog.setMessage("Espere, por favor"); // Setting Message
+                progressDialog.setTitle("Descargando documentación..."); // Setting Title
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
+                progressDialog.show(); // Display Progress Dialog
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+
+                descargarEditables();
+                imgEditables.setImageDrawable(getResources().getDrawable(R.drawable.descarga_on));
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        imgEditables.setImageDrawable(getResources().getDrawable(R.drawable.flechadescarga));
+                    }
+                }, 150);
+            }
+        });
+
         myGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -321,6 +637,78 @@ public class Documentacion extends AppCompatActivity {
         builder.detectFileUriExposure();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 0) {
+            if(resultCode == Activity.RESULT_OK || resultCode == Activity.RESULT_CANCELED){
+                guardarComo(destino);
+            }
+        }
+        else if (requestCode == 1) {
+            if(resultCode == Activity.RESULT_OK || resultCode == Activity.RESULT_CANCELED){
+                editablesAdapter.gestionFicheroEditado();
+            }
+        }
+    }
+
+    public void guardarComo(final String dest){
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        final EditText edittext = new EditText(this);
+        alert.setMessage("Introduce nombre de fichero");
+        alert.setTitle("Guardar como");
+
+        alert.setView(edittext);
+
+        alert.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+                Log.d("Chars alfanumericos", edittext.getText().toString().matches("[A-Za-z0-9-_ -]+") + ", " + edittext.getText().toString());
+
+                if(!edittext.getText().toString().matches("[A-Za-z0-9-_ -]+")){
+                    Toast.makeText(getApplicationContext(), "Escribe un nombre válido.\nLos caracteres aceptados son letras, números, espacio, guión y guión bajo.", Toast.LENGTH_SHORT).show();
+                    guardarComo(dest);
+                }
+                else {
+                    //  ----------------------------------------
+                    //  OK PASO 1 --> RECOGER EL NOMBRE INTRODUCIDO
+                    //  PASO 2 --> GENERAR NUEVA RUTA INTERNA
+                    //  PASO 3 --> INSERTAR DOCUMENTO EN TABLA DE EDITADOS
+                    //  PASO 4 --> AÑADIR LISTA DE EDITADOS A LA LISTA DE DOCUMENTOS LOCALES EDITADOS
+                    //  ----------------------------------------
+                    String nombreFichero = edittext.getText().toString() + "." + ext;
+                    String rutaNuevoFichero = generarNombreFicheroPDF();
+
+                    mySqliteOpenHelper.insertarEditable(db, rutaNuevoFichero, nombreFichero, cod_pedido);
+
+
+                    String sourcePath = dest;
+                    File source = new File(sourcePath);
+
+                    String destinationPath = getFilesDir().getAbsolutePath() + "/" + rutaNuevoFichero + "." + ext;
+                    File destination = new File(destinationPath);
+                    try
+                    {
+                        FileUtils.copyFile(source, destination);
+                        llenarArrayListLocales();
+                    }
+                    catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        });
+
+        alert.setNegativeButton("No guardar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // what ever you want to do with No option.
+            }
+        });
+
+        alert.show();
+    }
     public String getCod_pedido() {
         Intent i = getIntent();
         return i.getStringExtra("cod_pedido");
@@ -331,7 +719,7 @@ public class Documentacion extends AppCompatActivity {
         return myPrefs.getString("token", "Sin valor");
     }
 
-    public void listaDocumentosDesdeAPI(String cod_pedido, final String cat) {
+    public void listaDocumentosDesdeAPI(final String cod_pedido, final String cat) {
 
         RequestQueue queue = Volley.newRequestQueue(Documentacion.this);
         StringRequest sr = new StringRequest(Request.Method.GET, Documentacion.this.getResources().getString(R.string.urlBase) + Documentacion.this.getResources().getString(R.string.urlDocumentos) + cod_pedido,
@@ -357,20 +745,28 @@ public class Documentacion extends AppCompatActivity {
                                     String [] parts = actual.get("Fichero").toString().split(Pattern.quote("."));
                                     String ext = parts[1];
                                     rDocTecnica.add(new Documento(getCod_pedido(), "Documentación Técnica", generarNombreFicheroPDF() + "." + ext, actual.getString("Ruta"), actual.getString("Fichero")));
+                                } else if(actual.get("Categoria").equals("Editables")) {
+                                    String [] parts = actual.get("Fichero").toString().split(Pattern.quote("."));
+                                    String ext = parts[1];
+                                    rEditables.add(new Documento(getCod_pedido(), "Editables", generarNombreFicheroPDF() + "." + ext, actual.getString("Ruta"), actual.getString("Fichero")));
                                 }
+
                             }
                             Log.d("Nº fotos", "" + rFotos.size());
                             Log.d("Nº prevencion", "" + rPrevencion.size());
                             Log.d("Nº docTecnica", "" + rDocTecnica.size());
+                            Log.d("Nº editables", "" + rEditables.size());
                             if(isOnline(Documentacion.this)) {
                                 mySqliteOpenHelper.borrarFicherosDePedido(db, getCod_pedido(), cat);
                             }
                             if(!cat.equals("Fotos")){
                                 peticionesDescargas(cat, 0);
                             }
+                            if(cat.equals("Editables")){
+                                mySqliteOpenHelper.borrarEditados(db, cod_pedido);
+                            }
                             else {
                                 GridAdapter gridAdapter = new GridAdapter(Documentacion.this, rFotos, token);
-                                int asd = rFotos.size();
                                 myGrid.setAdapter(gridAdapter);
                             }
                         } catch (JSONException e) {
@@ -390,6 +786,9 @@ public class Documentacion extends AppCompatActivity {
 
                     imgPrevencion.setEnabled(true);
                     imgPrevencion.setClickable(true);
+
+                    imgEditables.setEnabled(true);
+                    imgEditables.setClickable(true);
                 }
                 catch (NullPointerException e){
                     e.printStackTrace();
@@ -411,6 +810,8 @@ public class Documentacion extends AppCompatActivity {
     public void llenarArrayListLocales() {
         docTecnica = mySqliteOpenHelper.getDocumentos(db, cod_pedido, "DocTecnica");
         prevencion = mySqliteOpenHelper.getDocumentos(db, cod_pedido, "Prevencion");
+        editables = mySqliteOpenHelper.getDocumentos(db, cod_pedido, "Editables");
+        editados = mySqliteOpenHelper.getEditables(db, cod_pedido);
         mostrarFicherosLocales();
     }
 
@@ -434,6 +835,29 @@ public class Documentacion extends AppCompatActivity {
             String[] values2 = new String[listaPrevencion.size()];
             listaPrevencion.toArray(values2);
 
+            List<String> listaEditables = new ArrayList<>();
+            for(int i=0; i<editables.size(); i++){
+                listaEditables.add(editables.get(i).getNombreFichero());
+            }
+
+            String[] values3 = new String[listaEditables.size()];
+            listaEditables.toArray(values3);
+
+            /*
+            List<String> listaEditados = new ArrayList<>();
+            for(int i=0; i<editados.size(); i++){
+                listaEditados.add(editados.get(i).getNombreFichero());
+            }
+
+            String[] values4 = new String[listaEditados.size()];
+            listaEditados.toArray(values4);
+            */
+
+            editablesAdapter = new ListaEditablesAdapter(this, editados);
+            listEditados.setAdapter(editablesAdapter);
+
+
+
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                     android.R.layout.simple_list_item_1, android.R.id.text1, values);
 
@@ -445,6 +869,18 @@ public class Documentacion extends AppCompatActivity {
 
             // Assign adapter to ListView
             listPrevencion.setAdapter(adapter2);
+
+            ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(this,
+                    android.R.layout.simple_list_item_1, android.R.id.text1, values3);
+
+            // Assign adapter to ListView
+            listEditables.setAdapter(adapter3);
+
+            /*
+            ArrayAdapter<String> adapter4 = new ArrayAdapter<String>(this,
+                    android.R.layout.simple_list_item_1, android.R.id.text1, values4);
+            */
+
 
         }catch (NullPointerException e){
             e.printStackTrace();
@@ -458,6 +894,7 @@ public class Documentacion extends AppCompatActivity {
 
         rDocTecnica = new ArrayList<>();
         rPrevencion = new ArrayList<>();
+        rEditables = new ArrayList<>();
         rFotos = new ArrayList<>();
         listaDocumentosDesdeAPI(cod_pedido, "DocTecnica");
     }
@@ -466,8 +903,48 @@ public class Documentacion extends AppCompatActivity {
 
         rDocTecnica = new ArrayList<>();
         rPrevencion = new ArrayList<>();
+        rEditables = new ArrayList<>();
         rFotos = new ArrayList<>();
         listaDocumentosDesdeAPI(cod_pedido, "Prevencion");
+    }
+
+    public void descargarEditables() {
+
+        rDocTecnica = new ArrayList<>();
+        rPrevencion = new ArrayList<>();
+        rEditables = new ArrayList<>();
+        rFotos = new ArrayList<>();
+
+        if(mySqliteOpenHelper.hayEditables(db, cod_pedido)){
+            AlertDialog.Builder alertdialogobuilder = new AlertDialog.Builder(Documentacion.this, R.style.MyDialogTheme);
+            alertdialogobuilder
+                    .setTitle("Atención")
+                    .setMessage("Al descargar la documentación editable, perderás los cambios realizados.\n¿Deseas continuar?")
+                    .setCancelable(false)
+                    .setNegativeButton("Cancelar",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    progressDialog.dismiss();
+                                    imgEditables.setEnabled(true);
+                                    imgEditables.setClickable(true);
+                                }
+                            })
+                    .setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            listaDocumentosDesdeAPI(cod_pedido, "Editables");
+                        }
+                    })
+                    .create();
+            alertdialogobuilder.show();
+        }
+        else {
+            listaDocumentosDesdeAPI(cod_pedido, "Editables");
+        }
+
     }
 
     public String generarNombreFicheroPDF() {
@@ -487,6 +964,9 @@ public class Documentacion extends AppCompatActivity {
             }
             else if(cat.equals("Prevencion")){
                 categorias = rPrevencion;
+            }
+            else if(cat.equals("Editables")){
+                categorias = rEditables;
             }
 
             if(categorias.size() > pos){
@@ -518,6 +998,8 @@ public class Documentacion extends AppCompatActivity {
                                             imgDocTecnica.setEnabled(true);
                                             imgPrevencion.setClickable(true);
                                             imgPrevencion.setEnabled(true);
+                                            imgEditables.setClickable(true);
+                                            imgEditables.setEnabled(true);
 
                                             progressDialog.dismiss();
                                             if(haPulsadoDocTecnica){
@@ -525,6 +1007,9 @@ public class Documentacion extends AppCompatActivity {
                                                 visibleDocTecnica = true;
                                                 listPrevencion.setVisibility(View.GONE);
                                                 visiblePrevencion = false;
+                                                listEditables.setVisibility(View.GONE);
+                                                enviarEditables.setVisibility(View.GONE);
+                                                visibleEditables = false;
                                                 myGrid.setVisibility(View.GONE);
                                                 visibleFotos = false;
                                                 haPulsadoDocTecnica = false;
@@ -534,9 +1019,24 @@ public class Documentacion extends AppCompatActivity {
                                                 visibleDocTecnica = false;
                                                 listPrevencion.setVisibility(View.VISIBLE);
                                                 visiblePrevencion = true;
+                                                listEditables.setVisibility(View.GONE);
+                                                enviarEditables.setVisibility(View.GONE);
+                                                visibleEditables = false;
                                                 myGrid.setVisibility(View.GONE);
                                                 visibleFotos = false;
-                                                haPulsadoPrevencion = true;
+                                                haPulsadoPrevencion = false;
+                                            }
+                                            else if(haPulsadoEditables){
+                                                listDocsTecnica.setVisibility(View.GONE);
+                                                visibleDocTecnica = false;
+                                                listPrevencion.setVisibility(View.GONE);
+                                                visiblePrevencion = false;
+                                                listEditables.setVisibility(View.VISIBLE);
+                                                enviarEditables.setVisibility(View.VISIBLE);
+                                                visibleEditables = true;
+                                                myGrid.setVisibility(View.GONE);
+                                                visibleFotos = false;
+                                                haPulsadoEditables = false;
                                             }
                                         }
                                         else {
@@ -562,7 +1062,9 @@ public class Documentacion extends AppCompatActivity {
                         imgPrevencion.setClickable(true);
                         imgDocTecnica.setEnabled(true);
                         imgPrevencion.setClickable(true);
-                        Toast.makeText(Documentacion.this, "Ha habido algún problema. Inténtalo de nuevo en unos minutos.", Toast.LENGTH_SHORT).show();
+                        imgEditables.setEnabled(true);
+                        imgEditables.setClickable(true);
+                        Toast.makeText(Documentacion.this, "Hay ficheros pendientes de sincronizar. Inténtalo de nuevo en unos minutos.", Toast.LENGTH_SHORT).show();
 
                     }
                 }
@@ -588,7 +1090,9 @@ public class Documentacion extends AppCompatActivity {
                     imgPrevencion.setEnabled(true);
                     imgPrevencion.setClickable(true);
                     imgDocTecnica.setEnabled(true);
-                    imgPrevencion.setClickable(true);
+                    imgDocTecnica.setClickable(true);
+                    imgEditables.setEnabled(true);
+                    imgEditables.setClickable(true);
                 }
             }
         }
@@ -598,9 +1102,94 @@ public class Documentacion extends AppCompatActivity {
             imgPrevencion.setEnabled(true);
             imgPrevencion.setClickable(true);
             imgDocTecnica.setEnabled(true);
-            imgPrevencion.setClickable(true);
+            imgDocTecnica.setClickable(true);
+            imgEditables.setEnabled(true);
+            imgEditables.setClickable(true);
             }
 
+    }
+
+    public void enviarEditados(View view) throws IOException {
+        if(!mySqliteOpenHelper.hayEditables(db, cod_pedido)){
+            Toast.makeText(getApplicationContext(), "No hay documentos editados", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Enviando documentación rellenada...");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+
+            RequestQueue queue = Volley.newRequestQueue(this);
+
+            editados = mySqliteOpenHelper.getEditables(db, cod_pedido);
+            for(int i = 0; i < editados.size(); i++){
+                final int actual = i;
+                File file = new File(getFilesDir().getAbsolutePath() + "/" +  editados.get(i).getRutaLocal() + ".pdf");
+                final String nombreFichero =  editados.get(i).getNombreFichero();
+                Log.d("NOMBRE DEL FICHERO", nombreFichero);
+                final byte[] ficheroBytes = FileUtils.readFileToByteArray(file);
+                final String ficheroCodificado = "holapaco, " + Base64.encodeToString(ficheroBytes, Base64.DEFAULT);
+
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://82.223.65.75:8000/api_iberdrola/creaIBE/doc_IB",
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                Log.d("ENVIO FICHEROS", response);
+                                try {
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    String salida = jsonObject.getString("salida");
+                                    if(salida.equals("OK")){
+                                        mySqliteOpenHelper.borrarEditado(db, editados.get(actual).getRutaLocal());
+                                    }
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    progressDialog.dismiss();
+                                    Toast.makeText(getApplicationContext(), "Algunos ficheros no se han enviado.", Toast.LENGTH_SHORT).show();
+                                }
+
+
+                                if(actual == editados.size() -1){
+                                    progressDialog.dismiss();
+                                    ArrayList<Documento> a = mySqliteOpenHelper.getEditables(db, cod_pedido);
+                                    if(a.size() == 0){
+                                        Toast.makeText(getApplicationContext(), "Se han enviado los ficheros.", Toast.LENGTH_SHORT).show();
+                                    }
+                                    ListaEditablesAdapter adapter = new ListaEditablesAdapter(Documentacion.this, a);
+                                    listEditados.setAdapter(adapter);
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        progressDialog.dismiss();
+                    }
+                }) {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<String, String>();
+                        params.put("Content-Type", "application/json");
+                        params.put("Authorization", "Bearer " + token);
+
+                        return params;
+                    }
+
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<String, String>();
+                        params.put("num_pedido", cod_pedido);
+                        params.put("foto", ficheroCodificado);
+                        params.put("nombre_fichero", nombreFichero);
+
+                        return params;
+                    }
+                };
+                stringRequest.setTag("ENVIO_FICHERO EDITADO");
+                stringRequest.setRetryPolicy((new DefaultRetryPolicy(60 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)));
+
+                queue.add(stringRequest);
+            }
+        }
     }
 
     public static boolean isOnline(Context context) {
