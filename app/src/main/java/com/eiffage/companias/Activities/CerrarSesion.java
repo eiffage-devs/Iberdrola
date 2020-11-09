@@ -1,4 +1,5 @@
 package com.eiffage.companias.Activities;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,6 +18,7 @@ public class CerrarSesion extends AppCompatActivity {
     Usuario miUsuario;
     TextView email, nombre, empresa, delegacion, cod_recurso;
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,8 +46,6 @@ public class CerrarSesion extends AppCompatActivity {
         catch (NullPointerException e){
             e.printStackTrace();
         }
-
-
     }
 
     public void cerrarSesion(View view){

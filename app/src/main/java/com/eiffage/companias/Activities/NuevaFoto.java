@@ -21,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.eiffage.companias.R;
@@ -66,7 +67,6 @@ public class NuevaFoto extends AppCompatActivity {
         else if(intent.getStringExtra("esNuevo").equals("NO")){
             cargarInfo();
         }
-
 
     }
 
@@ -149,8 +149,6 @@ public class NuevaFoto extends AppCompatActivity {
             //nuevaFoto.recycle();
             finish();
         }
-
-
     }
 
     public void cancelar(View view){
@@ -253,7 +251,7 @@ public class NuevaFoto extends AppCompatActivity {
                     longitude = String.valueOf(longi);
 
                 } else {
-                    //Toast.makeText(context, "Imposible localizar tu posición", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "Imposible localizar tu posición", Toast.LENGTH_SHORT).show();
 
                 }
             }
@@ -337,7 +335,13 @@ public class NuevaFoto extends AppCompatActivity {
                 spinnerSubcategorias.setSelection(subcats.indexOf(s));
             }
             else {
-                spinnerSubcategorias.setAdapter(null);
+                spinnerCategorias.setSelection(0);
+
+                ArrayAdapter<CharSequence> subadapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.sub1, android.R.layout.simple_spinner_item);
+                subadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                spinnerSubcategorias.setAdapter(subadapter);
+                spinnerSubcategorias.setSelection(0);
             }
         }
 
@@ -390,8 +394,5 @@ public class NuevaFoto extends AppCompatActivity {
 
             }
         });
-
     }
-
-
 }

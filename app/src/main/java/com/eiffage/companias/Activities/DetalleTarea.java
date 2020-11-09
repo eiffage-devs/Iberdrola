@@ -53,14 +53,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class DetalleTarea extends AppCompatActivity {
+
+    private String URL_ENVIAR_FOTO = "-";
+    private String URL_BORRAR_TAREA = "-";
 
     Button abrirCamara, enviar, guardarInforme, documentacion, traspasar;
     ArrayList<Foto> myPictures;
@@ -73,7 +81,7 @@ public class DetalleTarea extends AppCompatActivity {
     private static final int REQUEST_LOCATION = 1;
     boolean fallo = false;
     ProgressDialog progressDialog;
-    String token, mCurrentPhotoPath;
+    String token, mCurrentPhotoPath, fecha, hora;
     boolean nuevaFoto = true;
     RequestQueue queue = null;
 
@@ -82,6 +90,10 @@ public class DetalleTarea extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detalle_tarea);
+
+        URL_ENVIAR_FOTO = getResources().getString(R.string.urlEnviarFoto);
+        URL_BORRAR_TAREA = getResources().getString(R.string.urlFinalizarTarea);
+
         enviar = findViewById(R.id.btnEnviar);
         documentacion = findViewById(R.id.btnDocumentacion);
         traspasar = findViewById(R.id.btnTraspasar);
@@ -235,6 +247,7 @@ public class DetalleTarea extends AppCompatActivity {
 
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
+        Log.d("RUTA IMAGEN", mCurrentPhotoPath);
         return image;
     }
 
@@ -385,6 +398,83 @@ public class DetalleTarea extends AppCompatActivity {
                 listaFotos.setAdapter(listaFotosAdapter);
             }
         }
+        else if(requestCode == 3){
+            if(resultCode == RESULT_OK){
+                try {
+                    final Uri imageUri = data.getData();
+                    Log.d("URI PATH", imageUri.getPath());
+                    final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+
+                    Bitmap nuevaFoto;
+
+                    BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                    bmOptions.inJustDecodeBounds = true;
+
+                    // Decode the image file into a Bitmap sized to fill the View
+                    bmOptions.inJustDecodeBounds = false;
+                    bmOptions.inPurgeable = true;
+
+                    Bitmap bitmap = BitmapFactory.decodeStream(imageStream);
+
+                    int photoW = bitmap.getWidth();
+                    int photoH = bitmap.getHeight();
+
+                    Log.d("PHOTO W", "" + photoW);
+                    Log.d("PHOTO H", "" + photoH);
+
+                    int width;
+                    int height;
+
+                    Matrix matrix = new Matrix();
+
+                    //HORIZONTAL
+                    if (photoW > photoH){
+                        double coef = photoW / 1263.0;
+                        Log.d("COEF HORIZ ", coef + "");
+
+                        width = 1263;
+
+                        double beforeInt = photoW / coef;
+                        Log.d("BEFORE INT HORIZONTAL", beforeInt + "" );
+
+                        height = (int) (photoH / coef);
+
+                    }
+                    //VERTICAL
+                    else {
+                        double coef = photoH / 893.0;
+                        Log.d("COEF VERTI ", coef + "");
+
+                        height = 893;
+                        double beforeInt = photoW / coef;
+                        Log.d("BEFORE INT VERTICAL", beforeInt + "" );
+                        width = (int) (photoW / coef);
+
+                    }
+
+                    Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap, width, height, true);
+                    nuevaFoto = bitmap1;
+                    //nuevaFoto = Bitmap.createBitmap(bitmap1, 0, 0, bitmap1.getWidth(), bitmap1.getHeight(), matrix, true);
+
+                    String urlFoto = imageUri.toString();
+                    recogerFechaYHora();
+
+                    Foto nueva = new Foto(nuevaFoto, "-", "-", "-", fecha, hora, "-", idTarea, fecha+hora, urlFoto);
+                    myPictures.add(0, nueva);
+                    listaFotosAdapter = new ListaFotosAdapter(this, myPictures);
+                    listaFotos.setAdapter(listaFotosAdapter);
+                    ScrollView scrollView = findViewById(R.id.scrollTarea);
+                    scrollView.smoothScrollTo(0, 0);
+                    guardarInforme();
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+            else {
+                Toast.makeText(DetalleTarea.this, "No se ha seleccionado ninguna foto", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     public void cargarFotosLocales(String idTarea) {
@@ -412,7 +502,6 @@ public class DetalleTarea extends AppCompatActivity {
         listaFotos.setAdapter(listaFotosAdapter);
         ScrollView scrollView = findViewById(R.id.scrollTarea);
         scrollView.fullScroll(ScrollView.FOCUS_UP);
-
     }
 
     public void enviarInforme(View v) {
@@ -491,6 +580,7 @@ public class DetalleTarea extends AppCompatActivity {
 
             while (!c.isAfterLast()) {
                 byte[] bytarray = Base64.decode(c.getString(1), Base64.DEFAULT);
+                Log.d("BASE64", "" + bytarray);
                 Bitmap imagen = BitmapFactory.decodeByteArray(bytarray, 0,
                         bytarray.length);
 
@@ -517,10 +607,8 @@ public class DetalleTarea extends AppCompatActivity {
                     } else {
                         enviarFoto(fotoActual, true, true);
                     }
-
                 } else {
                     enviarFoto(fotoActual, false, false);
-
                 }
             }
             mySqliteOpenHelper.fotosEnviadas(db, idTarea);
@@ -531,7 +619,6 @@ public class DetalleTarea extends AppCompatActivity {
                 borrarTarea(idTarea);
             }
         }
-
     }
 
     public void enviarFoto(final Foto foto, final boolean ultimaFoto, final boolean mostrarResultado) throws IOException {
@@ -545,8 +632,16 @@ public class DetalleTarea extends AppCompatActivity {
         token = myPrefs.getString("token", "Sin valor");
         Log.d("TOKEN", token);
 
+        Log.d("num_pedido", cod_pedido);
+        Log.d("num_tarea", idTarea);
+        Log.d("descripcion", foto.getDescripcion());
+        Log.d("area", foto.getCategoria());
+        Log.d("subarea", foto.getSubcategoria());
+        Log.d("fecha", foto.getFecha() + ", " + foto.getHora());
+        Log.d("coordenadas", foto.getCoordenadasFoto());
+        Log.d("foto", encodedImage);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getResources().getString(R.string.urlBase) + getResources().getString(R.string.urlEnviarFoto),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_ENVIAR_FOTO,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -559,14 +654,11 @@ public class DetalleTarea extends AppCompatActivity {
                                     if (mostrarResultado) {
                                         mostrarResultado(false);
                                     }
-
                                 }
                             }
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -578,14 +670,12 @@ public class DetalleTarea extends AppCompatActivity {
                     if (mostrarResultado) {
                         mostrarResultado(false);
                     }
-
                 }
             }
         }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("Content-Type", "application/json");
                 params.put("Authorization", "Bearer " + token);
 
                 return params;
@@ -610,11 +700,57 @@ public class DetalleTarea extends AppCompatActivity {
         stringRequest.setRetryPolicy((new DefaultRetryPolicy(60 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)));
 
         queue.add(stringRequest);
+    }
 
+    public void añadirFotoDesdeGaleria(View view) {
+        Intent getPictureIntent = new Intent(Intent.ACTION_PICK);
+        // Ensure that there's a camera activity to handle the intent
+        if (getPictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(DetalleTarea.this,
+                        "com.eiffage.companias",
+                        photoFile);
+                getPictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                getPictureIntent.setType("image/");
+                nuevaFoto = true;
+                startActivityForResult(getPictureIntent, 3);
+            }
+        }
+    }
+
+    public void recogerFechaYHora(){
+        //----------Fecha y hora de la foto----------\\
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-dd-MM", Locale.getDefault());
+        Date date = new Date();
+        fecha = dateFormat.format(date);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("CET"));
+        String tempHora = "" + calendar.get(Calendar.HOUR_OF_DAY);
+        if (tempHora.length() == 1) {
+            tempHora = "0" + tempHora;
+        }
+        String tempMin = "" + calendar.get(Calendar.MINUTE);
+        if (tempMin.length() == 1) {
+            tempMin = "0" + tempMin;
+        }
+        String tempSeg = "" + calendar.get(Calendar.SECOND);
+        if (tempSeg.length() == 1) {
+            tempSeg = "0" + tempSeg;
+        }
+
+        hora = tempHora + ":" + tempMin + ":" + tempSeg;
     }
 
     public void mostrarResultado(final boolean terminar) {
-
         if (!terminar) {
             if (fallo) {
                 AlertDialog.Builder alertdialogobuilder = new AlertDialog.Builder(DetalleTarea.this, R.style.MyDialogTheme);
@@ -708,7 +844,6 @@ public class DetalleTarea extends AppCompatActivity {
                 }
             }
         }
-
     }
 
     public void borrarTarea(final String tareaId) {
@@ -718,7 +853,7 @@ public class DetalleTarea extends AppCompatActivity {
         //Finalizar tarea en Navision
         RequestQueue queue = Volley.newRequestQueue(this);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getResources().getString(R.string.urlBase) + getResources().getString(R.string.urlFinalizarTarea),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_BORRAR_TAREA,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -746,7 +881,6 @@ public class DetalleTarea extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("Content-Type", "application/json");
                 params.put("Authorization", "Bearer " + token);
 
                 return params;
@@ -765,6 +899,82 @@ public class DetalleTarea extends AppCompatActivity {
 
     }
 
+    public void eliminarTarea(View v){
+        AlertDialog.Builder alertdialogobuilder = new AlertDialog.Builder(this, R.style.MyDialogTheme);
+        alertdialogobuilder
+                .setTitle("Eliminar tarea")
+                .setMessage("¿Seguro que quieres eliminar la tarea?\nSe borrará la tarea y no aparecerá en tu listado.")
+                .setCancelable(true)
+                .setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        progressDialog = muestraLoader("Eliminando tarea...");
+                        SharedPreferences myPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+                        token = myPrefs.getString("token", "Sin valor");
+
+                        //Finalizar tarea en Navision
+                        RequestQueue queue = Volley.newRequestQueue(DetalleTarea.this);
+
+                        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_BORRAR_TAREA,
+                                new Response.Listener<String>() {
+                                    @Override
+                                    public void onResponse(String response) {
+                                        mySqliteOpenHelper.borrarTodasLasFotosDeTarea(db, idTarea);
+                                        mySqliteOpenHelper.borrarTarea(db, idTarea);
+                                        Log.d("FINALIZAR TAREA", response);
+                                        try {
+                                            JSONObject j = new JSONObject(response);
+                                            progressDialog.dismiss();
+                                            finish();
+
+                                        } catch (JSONException e) {
+                                            progressDialog.dismiss();
+                                            e.printStackTrace();
+                                        }
+
+
+                                    }
+                                }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                progressDialog.dismiss();
+                                Log.d("FINALIZAR TAREA", error.toString());
+                                Toast.makeText(getApplicationContext(), "No hay conexión, prueba más tarde", Toast.LENGTH_SHORT).show();
+                                enviar.setEnabled(true);
+                            }
+                        }) {
+                            @Override
+                            public Map<String, String> getHeaders() throws AuthFailureError {
+                                Map<String, String> params = new HashMap<String, String>();
+                                //params.put("Content-Type", "application/json");
+                                params.put("Authorization", "Bearer " + token);
+
+                                return params;
+                            }
+
+                            @Override
+                            protected Map<String, String> getParams() throws AuthFailureError {
+                                Map<String, String> params = new HashMap<String, String>();
+                                params.put("num_pedido", cod_pedido);
+                                params.put("num_tarea", idTarea);
+
+                                return params;
+                            }
+                        };
+                        queue.add(stringRequest);
+                    }
+                })
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+        alertdialogobuilder.show();
+
+    }
     @Override
     public void onBackPressed() {
 
@@ -807,5 +1017,17 @@ public class DetalleTarea extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    public ProgressDialog muestraLoader(String mensaje){
+        progressDialog = new ProgressDialog(DetalleTarea.this);
+        progressDialog.setMessage(mensaje); // Setting Message
+        progressDialog.setTitle("Espere, por favor"); // Setting Title
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
+        progressDialog.show(); // Display Progress Dialog
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        return progressDialog;
     }
 }

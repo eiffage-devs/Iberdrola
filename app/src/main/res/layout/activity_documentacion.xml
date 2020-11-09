@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,234 +7,324 @@
     tools:context=".Activities.Documentacion">
 
     <LinearLayout
-        android:id="@+id/documentos4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/listaPrevencion"
-        android:layout_marginTop="2dp"
-        android:background="@color/NegroBootstrap"
-        android:orientation="horizontal"
-        android:visibility="visible">
-
-        <ImageView
-            android:id="@+id/arrowEditables"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="20dp"
-            android:layout_weight="2.5"
-            android:adjustViewBounds="false"
-            app:srcCompat="@android:drawable/arrow_down_float" />
-
-        <TextView
-            android:id="@+id/txtEditables"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:layout_weight="1"
-            android:background="@color/NegroBootstrap"
-            android:paddingBottom="20dp"
-            android:paddingLeft="20dp"
-            android:paddingTop="20dp"
-            android:text="Doc. Editables"
-            android:textColor="@android:color/white"
-            android:textSize="24sp" />
-
-        <ImageView
-            android:id="@+id/imgDownloadEditables"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_weight="2"
-            android:adjustViewBounds="true"
-            android:background="@color/NegroBootstrap"
-            android:scaleX="0.7"
-            android:scaleY="0.7"
-            app:srcCompat="@drawable/flechadescarga" />
-
-    </LinearLayout>
-
-    <ListView
-        android:id="@+id/listaEditables"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/documentos4"
-        android:visibility="gone" >
-    </ListView>
-
-    <ListView
-        android:id="@+id/listaEditados"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/listaEditables"
-        android:background="@android:color/holo_red_light"
-        android:visibility="gone" />
-
-    <Button
-        android:id="@+id/enviarEditables"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/listaEditados"
-        android:layout_margin="2dp"
-        android:background="@color/AzulBootstrap"
-        android:onClick="enviarEditados"
-        android:padding="2dp"
-        android:text="Enviar documentos editados"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        android:visibility="gone" />
-
-    <LinearLayout
-        android:id="@+id/documentos1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/NegroBootstrap"
-        android:orientation="horizontal"
-        android:visibility="visible">
-
-        <ImageView
-            android:id="@+id/arrowDocTecnica"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="20dp"
-            android:layout_weight="2.5"
-            android:adjustViewBounds="false"
-            app:srcCompat="@android:drawable/arrow_down_float" />
-
-        <TextView
-            android:id="@+id/txtDocTecnica"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:layout_weight="1"
-            android:background="@color/NegroBootstrap"
-            android:paddingBottom="20dp"
-            android:paddingLeft="20dp"
-            android:paddingTop="20dp"
-            android:text="Doc. Técnica"
-            android:textColor="@android:color/white"
-            android:textSize="24sp" />
-
-        <ImageView
-            android:id="@+id/imgDownloadDocTecnica"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_weight="2"
-            android:adjustViewBounds="true"
-            android:background="@color/NegroBootstrap"
-            android:scaleX="0.7"
-            android:scaleY="0.7"
-            app:srcCompat="@drawable/flechadescarga" />
-
-    </LinearLayout>
-
-    <ListView
-        android:id="@+id/listaDocTecnica"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/documentos1"
-        android:visibility="gone" />
-
-    <LinearLayout
-        android:id="@+id/documentos2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/listaDocTecnica"
-        android:layout_marginTop="2dp"
-        android:background="@color/NegroBootstrap"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/arrowPrevencion"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="20dp"
-            android:layout_weight="2.5"
-            android:adjustViewBounds="false"
-            app:srcCompat="@android:drawable/arrow_down_float" />
-
-        <TextView
-            android:id="@+id/txtPrevencion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:layout_weight="1"
-            android:background="@color/NegroBootstrap"
-            android:paddingBottom="20dp"
-            android:paddingLeft="20dp"
-            android:paddingTop="20dp"
-            android:text="Prevención"
-            android:textColor="@android:color/white"
-            android:textSize="24sp" />
-
-        <ImageView
-            android:id="@+id/imgDownloadPrevencion"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_weight="2"
-            android:adjustViewBounds="true"
-            android:background="@color/NegroBootstrap"
-            android:scaleX="0.7"
-            android:scaleY="0.7"
-            app:srcCompat="@drawable/flechadescarga" />
-
-    </LinearLayout>
-
-    <ListView
-        android:id="@+id/listaPrevencion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/documentos2"
-        android:visibility="gone" >
-
-    </ListView>
-
-    <LinearLayout
-        android:id="@+id/documentos3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/enviarEditables"
-        android:layout_marginTop="2dp"
-        android:background="@color/NegroBootstrap"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/arrowFotos"
-            android:layout_width="130dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="20dp"
-            android:layout_weight="3.5"
-            android:adjustViewBounds="false"
-            app:srcCompat="@android:drawable/arrow_down_float" />
-
-        <TextView
-            android:id="@+id/txtFotos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:layout_weight="1"
-            android:paddingBottom="20dp"
-            android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
-            android:paddingTop="20dp"
-            android:text="Fotos"
-            android:textColor="@android:color/white"
-            android:textSize="24sp" />
-
-    </LinearLayout>
-
-
-    <GridView
-        android:id="@+id/gridFotos"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/documentos3"
-        android:background="@color/NegroBootstrap"
-        android:horizontalSpacing="10dp"
-        android:numColumns="4"
-        android:verticalSpacing="10dp" />
-</RelativeLayout>
+        android:orientation="vertical">
+
+        <!--<ListView
+            android:id="@+id/listaEditables"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/documentos4"
+            android:visibility="gone" >
+        </ListView>
+
+        <ListView
+            android:id="@+id/listaEditados"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/containerEditables"
+            android:background="@android:color/holo_red_light"
+            android:visibility="gone" />-->
+
+        <LinearLayout
+            android:id="@+id/documentos1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/NegroBootstrap"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/arrowDocTecnica"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="20dp"
+                android:layout_weight="2.65"
+                android:adjustViewBounds="false"
+                app:srcCompat="@android:drawable/arrow_down_float" />
+
+            <TextView
+                android:id="@+id/txtDocTecnica"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_weight="1"
+                android:background="@color/NegroBootstrap"
+                android:paddingLeft="20dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:text="Doc. Técnica"
+                android:textColor="@android:color/white"
+                android:textSize="24sp" />
+
+            <ImageView
+                android:id="@+id/imgDownloadDocTecnica"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="2"
+                android:adjustViewBounds="true"
+                android:background="@color/NegroBootstrap"
+                android:scaleX="0.7"
+                android:scaleY="0.7"
+                app:srcCompat="@drawable/flechadescarga" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/containerDocTecnica"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/documentos4"
+            android:orientation="vertical">
+            <com.eiffage.companias.ExpandableHeightListView
+                android:id="@+id/listaDocTecnica"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@color/NegroBootstrap"
+                android:dividerHeight="2dp"
+                android:isScrollContainer="false"
+                android:scrollbars="none"
+                android:visibility="gone"/>
+
+            <!--
+            <ListView
+                android:id="@+id/listaDocTecnica"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/documentos1"
+                android:visibility="gone" />
+
+                -->
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/documentos2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/listaDocTecnica"
+            android:layout_marginTop="2dp"
+            android:background="@color/NegroBootstrap"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/arrowPrevencion"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="20dp"
+                android:layout_weight="2.65"
+                android:adjustViewBounds="false"
+                app:srcCompat="@android:drawable/arrow_down_float" />
+
+            <TextView
+                android:id="@+id/txtPrevencion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_weight="1"
+                android:background="@color/NegroBootstrap"
+                android:paddingLeft="20dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:text="Prevención"
+                android:textColor="@android:color/white"
+                android:textSize="24sp" />
+
+            <ImageView
+                android:id="@+id/imgDownloadPrevencion"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="2"
+                android:adjustViewBounds="true"
+                android:background="@color/NegroBootstrap"
+                android:scaleX="0.7"
+                android:scaleY="0.7"
+                app:srcCompat="@drawable/flechadescarga" />
+
+        </LinearLayout>
+
+
+
+            <LinearLayout
+                android:id="@+id/containerDocPrevencion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/documentos4"
+                android:orientation="vertical">
+                <com.eiffage.companias.ExpandableHeightListView
+                    android:id="@+id/listaPrevencion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@color/NegroBootstrap"
+                    android:dividerHeight="2dp"
+                    android:isScrollContainer="false"
+                    android:scrollbars="none"
+                    android:visibility="gone"/>
+
+                <!--
+                <ListView
+                    android:id="@+id/listaPrevencion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/documentos2"
+                    android:visibility="gone">
+                 </ListView>
+                    -->
+
+            </LinearLayout>
+
+
+
+        <LinearLayout
+            android:id="@+id/documentos4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/listaPrevencion"
+            android:layout_marginTop="2dp"
+            android:background="@color/NegroBootstrap"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/arrowEditables"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="20dp"
+                android:layout_weight="2.65"
+                android:adjustViewBounds="false"
+                app:srcCompat="@android:drawable/arrow_down_float" />
+
+            <TextView
+                android:id="@+id/txtEditables"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_weight="1"
+                android:background="@color/NegroBootstrap"
+                android:paddingLeft="20dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:text="Doc. Editables"
+                android:textColor="@android:color/white"
+                android:textSize="24sp" />
+
+            <ImageView
+                android:id="@+id/imgDownloadEditables"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="2"
+                android:adjustViewBounds="true"
+                android:background="@color/NegroBootstrap"
+                android:scaleX="0.7"
+                android:scaleY="0.7"
+                app:srcCompat="@drawable/flechadescarga" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/containerEditables"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/documentos4"
+            android:orientation="vertical">
+
+            <com.eiffage.companias.ExpandableHeightListView
+                android:id="@+id/listaEditables"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@color/NegroBootstrap"
+                android:dividerHeight="2dp"
+                android:isScrollContainer="false"
+                android:scrollbars="none"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/containerEditados"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/containerEditables"
+            android:orientation="vertical">
+
+            <com.eiffage.companias.ExpandableHeightListView
+                android:id="@+id/listaEditados"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@color/NegroBootstrap"
+                android:dividerHeight="2dp"
+                android:isScrollContainer="false"
+                android:scrollbars="none"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/enviarEditables"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/containerEditados"
+            android:layout_margin="2dp"
+            android:background="@color/AzulBootstrap"
+            android:onClick="enviarEditados"
+            android:padding="2dp"
+            android:text="Enviar documentos editados"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/documentos3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/enviarEditables"
+            android:layout_marginTop="2dp"
+            android:background="@color/NegroBootstrap"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/arrowFotos"
+                android:layout_width="130dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="20dp"
+                android:layout_weight="3.5"
+                android:adjustViewBounds="false"
+                app:srcCompat="@android:drawable/arrow_down_float" />
+
+            <TextView
+                android:id="@+id/txtFotos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_weight="1"
+                android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:text="Fotos"
+                android:textColor="@android:color/white"
+                android:textSize="24sp" />
+
+        </LinearLayout>
+
+        <GridView
+            android:id="@+id/gridFotos"
+            android:layout_width="match_parent"
+            android:layout_height="437dp"
+            android:layout_below="@id/documentos3"
+            android:background="@color/NegroBootstrap"
+            android:horizontalSpacing="10dp"
+            android:numColumns="4"
+            android:verticalSpacing="10dp"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+</ScrollView>

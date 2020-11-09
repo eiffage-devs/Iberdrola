@@ -31,6 +31,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +54,7 @@ import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Document;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -68,6 +70,8 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 public class Documentacion extends AppCompatActivity {
+
+    private String URL_ENVIAR_DOCUMENTO = "-";
 
     //Views
     ListView listDocsTecnica, listPrevencion, listEditables, listEditados;
@@ -114,6 +118,8 @@ public class Documentacion extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_documentacion);
+
+        URL_ENVIAR_DOCUMENTO = getResources().getString(R.string.urlEnviarDocumento);
 
         listDocsTecnica = findViewById(R.id.listaDocTecnica);
         listPrevencion = findViewById(R.id.listaPrevencion);
@@ -431,14 +437,7 @@ public class Documentacion extends AppCompatActivity {
         listDocsTecnica.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                /*if(docTecnica.get(position).getNombreFichero().contains(".PDF") || docTecnica.get(position).getNombreFichero().contains(".pdf")){
-                    String rutaLocal = docTecnica.get(position).getRutaLocal();
-                    Intent i = new Intent(Documentacion.this, PDFViewer.class);
-                    i.putExtra("rutaFichero", rutaLocal);
-                    startActivity(i);
-                }
-                else {
-*/
+
                     if(verifyStoragePermissions(Documentacion.this)){
                         String sourcePath = docTecnica.get(position).getRutaLocal();
                         File source = new File(sourcePath);
@@ -471,11 +470,6 @@ public class Documentacion extends AppCompatActivity {
         listPrevencion.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                /*String rutaLocal = prevencion.get(position).getRutaLocal();
-                Intent i = new Intent(Documentacion.this, PDFViewer.class);
-                i.putExtra("rutaFichero", rutaLocal);
-                startActivity(i);
-                */
                 if(verifyStoragePermissions(Documentacion.this)){
                     String sourcePath = prevencion.get(position).getRutaLocal();
                     File source = new File(sourcePath);
@@ -506,11 +500,6 @@ public class Documentacion extends AppCompatActivity {
         listEditables.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                /*String rutaLocal = prevencion.get(position).getRutaLocal();
-                Intent i = new Intent(Documentacion.this, PDFViewer.class);
-                i.putExtra("rutaFichero", rutaLocal);
-                startActivity(i);
-                */
                 if(verifyStoragePermissions(Documentacion.this)){
                     String sourcePath = editables.get(position).getRutaLocal();
                     origen = sourcePath;
@@ -550,14 +539,8 @@ public class Documentacion extends AppCompatActivity {
                 imgDocTecnica.setClickable(false);
                 imgDocTecnica.setEnabled(false);
                 haPulsadoDocTecnica = true;
+                //progressDialog = muestraLoader("Descargando documentación técnica...");
 
-                progressDialog = new ProgressDialog(Documentacion.this);
-                progressDialog.setMessage("Espere, por favor"); // Setting Message
-                progressDialog.setTitle("Descargando documentación..."); // Setting Title
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
-                progressDialog.show(); // Display Progress Dialog
-                progressDialog.setCancelable(false);
-                progressDialog.show();
 
                 descargarDocumentacionTecnica();
                 imgDocTecnica.setImageDrawable(getResources().getDrawable(R.drawable.descarga_on));
@@ -577,13 +560,8 @@ public class Documentacion extends AppCompatActivity {
                 imgPrevencion.setEnabled(false);
                 haPulsadoPrevencion = true;
 
-                progressDialog = new ProgressDialog(Documentacion.this);
-                progressDialog.setMessage("Espere, por favor"); // Setting Message
-                progressDialog.setTitle("Descargando documentación..."); // Setting Title
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
-                progressDialog.show(); // Display Progress Dialog
-                progressDialog.setCancelable(false);
-                progressDialog.show();
+                //progressDialog = muestraLoader("Descargando documentación de prevención...");
+
 
                 descargarPrevencion();
                 imgPrevencion.setImageDrawable(getResources().getDrawable(R.drawable.descarga_on));
@@ -603,13 +581,7 @@ public class Documentacion extends AppCompatActivity {
                 imgEditables.setEnabled(false);
                 haPulsadoEditables = true;
 
-                progressDialog = new ProgressDialog(Documentacion.this);
-                progressDialog.setMessage("Espere, por favor"); // Setting Message
-                progressDialog.setTitle("Descargando documentación..."); // Setting Title
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
-                progressDialog.show(); // Display Progress Dialog
-                progressDialog.setCancelable(false);
-                progressDialog.show();
+                //progressDialog = muestraLoader("Descargando documentación editable...");
 
                 descargarEditables();
                 imgEditables.setImageDrawable(getResources().getDrawable(R.drawable.descarga_on));
@@ -663,8 +635,6 @@ public class Documentacion extends AppCompatActivity {
         alert.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
 
-                Log.d("Chars alfanumericos", edittext.getText().toString().matches("[A-Za-z0-9-_ -]+") + ", " + edittext.getText().toString());
-
                 if(!edittext.getText().toString().matches("[A-Za-z0-9-_ -]+")){
                     Toast.makeText(getApplicationContext(), "Escribe un nombre válido.\nLos caracteres aceptados son letras, números, espacio, guión y guión bajo.", Toast.LENGTH_SHORT).show();
                     guardarComo(dest);
@@ -679,9 +649,6 @@ public class Documentacion extends AppCompatActivity {
                     String nombreFichero = edittext.getText().toString() + "." + ext;
                     String rutaNuevoFichero = generarNombreFicheroPDF();
 
-                    mySqliteOpenHelper.insertarEditable(db, rutaNuevoFichero, nombreFichero, cod_pedido);
-
-
                     String sourcePath = dest;
                     File source = new File(sourcePath);
 
@@ -690,12 +657,15 @@ public class Documentacion extends AppCompatActivity {
                     try
                     {
                         FileUtils.copyFile(source, destination);
-                        llenarArrayListLocales();
+                        mySqliteOpenHelper.insertarEditable(db, rutaNuevoFichero, nombreFichero, cod_pedido);
+
                     }
                     catch (IOException e)
                     {
                         e.printStackTrace();
                     }
+                    llenarArrayListLocales();
+                    listEditados.setVisibility(View.VISIBLE);
                 }
 
             }
@@ -720,6 +690,8 @@ public class Documentacion extends AppCompatActivity {
     }
 
     public void listaDocumentosDesdeAPI(final String cod_pedido, final String cat) {
+
+        progressDialog = muestraLoader("Preparando documentos...");
 
         RequestQueue queue = Volley.newRequestQueue(Documentacion.this);
         StringRequest sr = new StringRequest(Request.Method.GET, Documentacion.this.getResources().getString(R.string.urlBase) + Documentacion.this.getResources().getString(R.string.urlDocumentos) + cod_pedido,
@@ -756,20 +728,31 @@ public class Documentacion extends AppCompatActivity {
                             Log.d("Nº prevencion", "" + rPrevencion.size());
                             Log.d("Nº docTecnica", "" + rDocTecnica.size());
                             Log.d("Nº editables", "" + rEditables.size());
+
+                            for(int i = 0; i< rPrevencion.size(); i++){
+                                Log.d("Prevencion " + i, rPrevencion.get(i).getNombreFichero() + ", " + rPrevencion.get(i).getUrl());
+                            }
                             if(isOnline(Documentacion.this)) {
                                 mySqliteOpenHelper.borrarFicherosDePedido(db, getCod_pedido(), cat);
                             }
+
                             if(!cat.equals("Fotos")){
+                                progressDialog.dismiss();
+                                progressDialog = muestraLoader("Actualizando lista de documentos...");
+                                if(cat.equals("Editables")){
+                                    mySqliteOpenHelper.borrarEditados(db, cod_pedido);
+                                }
                                 peticionesDescargas(cat, 0);
                             }
-                            if(cat.equals("Editables")){
-                                mySqliteOpenHelper.borrarEditados(db, cod_pedido);
-                            }
                             else {
+                                progressDialog.dismiss();
                                 GridAdapter gridAdapter = new GridAdapter(Documentacion.this, rFotos, token);
                                 myGrid.setAdapter(gridAdapter);
                             }
+
+
                         } catch (JSONException e) {
+                            progressDialog.dismiss();
                             e.printStackTrace();
                         }
                     }
@@ -777,8 +760,8 @@ public class Documentacion extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("ERROR", error.toString());
+                progressDialog.dismiss();
                 try{
-                    progressDialog.dismiss();
                     Toast.makeText(getApplicationContext(), "No hay conexión, inténtalo más tarde.", Toast.LENGTH_SHORT).show();
 
                     imgDocTecnica.setEnabled(true);
@@ -800,7 +783,6 @@ public class Documentacion extends AppCompatActivity {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("Content-Type", "application/json");
                 params.put("Authorization", "Bearer " + token);
-
                 return params;
             }
         };
@@ -843,16 +825,6 @@ public class Documentacion extends AppCompatActivity {
             String[] values3 = new String[listaEditables.size()];
             listaEditables.toArray(values3);
 
-            /*
-            List<String> listaEditados = new ArrayList<>();
-            for(int i=0; i<editados.size(); i++){
-                listaEditados.add(editados.get(i).getNombreFichero());
-            }
-
-            String[] values4 = new String[listaEditados.size()];
-            listaEditados.toArray(values4);
-            */
-
             editablesAdapter = new ListaEditablesAdapter(this, editados);
             listEditados.setAdapter(editablesAdapter);
 
@@ -875,11 +847,6 @@ public class Documentacion extends AppCompatActivity {
 
             // Assign adapter to ListView
             listEditables.setAdapter(adapter3);
-
-            /*
-            ArrayAdapter<String> adapter4 = new ArrayAdapter<String>(this,
-                    android.R.layout.simple_list_item_1, android.R.id.text1, values4);
-            */
 
 
         }catch (NullPointerException e){
@@ -944,7 +911,6 @@ public class Documentacion extends AppCompatActivity {
         else {
             listaDocumentosDesdeAPI(cod_pedido, "Editables");
         }
-
     }
 
     public String generarNombreFicheroPDF() {
@@ -955,6 +921,7 @@ public class Documentacion extends AppCompatActivity {
     }
 
     public void peticionesDescargas(final String cat, final int pos){
+
         if(isOnline(Documentacion.this)) {
             RequestQueue mRequestQueue = Volley.newRequestQueue(Documentacion.this);
 
@@ -1038,16 +1005,19 @@ public class Documentacion extends AppCompatActivity {
                                                 visibleFotos = false;
                                                 haPulsadoEditables = false;
                                             }
+                                            progressDialog.dismiss();
                                         }
                                         else {
                                             peticionesDescargas(cat, (pos+1));
                                         }
+
 
                                     }
                                     else {
                                         progressDialog.dismiss();
                                     }
                                 } catch (Exception e) {
+                                    progressDialog.dismiss();
                                     // TODO Auto-generated catch block
                                     Log.d("KEY_ERROR", "UNABLE TO DOWNLOAD FILE");
                                     e.printStackTrace();
@@ -1061,7 +1031,7 @@ public class Documentacion extends AppCompatActivity {
                         imgPrevencion.setEnabled(true);
                         imgPrevencion.setClickable(true);
                         imgDocTecnica.setEnabled(true);
-                        imgPrevencion.setClickable(true);
+                        imgDocTecnica.setClickable(true);
                         imgEditables.setEnabled(true);
                         imgEditables.setClickable(true);
                         Toast.makeText(Documentacion.this, "Hay ficheros pendientes de sincronizar. Inténtalo de nuevo en unos minutos.", Toast.LENGTH_SHORT).show();
@@ -1106,7 +1076,6 @@ public class Documentacion extends AppCompatActivity {
             imgEditables.setEnabled(true);
             imgEditables.setClickable(true);
             }
-
     }
 
     public void enviarEditados(View view) throws IOException {
@@ -1114,10 +1083,7 @@ public class Documentacion extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "No hay documentos editados", Toast.LENGTH_SHORT).show();
         }
         else {
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage("Enviando documentación rellenada...");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
+            progressDialog = muestraLoader("Enviando documentación rellenada...");
 
             RequestQueue queue = Volley.newRequestQueue(this);
 
@@ -1130,7 +1096,7 @@ public class Documentacion extends AppCompatActivity {
                 final byte[] ficheroBytes = FileUtils.readFileToByteArray(file);
                 final String ficheroCodificado = "holapaco, " + Base64.encodeToString(ficheroBytes, Base64.DEFAULT);
 
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://82.223.65.75:8000/api_iberdrola/creaIBE/doc_IB",
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_ENVIAR_DOCUMENTO,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
@@ -1148,15 +1114,17 @@ public class Documentacion extends AppCompatActivity {
                                     Toast.makeText(getApplicationContext(), "Algunos ficheros no se han enviado.", Toast.LENGTH_SHORT).show();
                                 }
 
-
                                 if(actual == editados.size() -1){
                                     progressDialog.dismiss();
                                     ArrayList<Documento> a = mySqliteOpenHelper.getEditables(db, cod_pedido);
                                     if(a.size() == 0){
                                         Toast.makeText(getApplicationContext(), "Se han enviado los ficheros.", Toast.LENGTH_SHORT).show();
+                                        //----------Descarga de documentos editables----------\\
+                                        descargarEditables();
                                     }
                                     ListaEditablesAdapter adapter = new ListaEditablesAdapter(Documentacion.this, a);
                                     listEditados.setAdapter(adapter);
+
                                 }
                             }
                         }, new Response.ErrorListener() {
@@ -1178,9 +1146,9 @@ public class Documentacion extends AppCompatActivity {
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> params = new HashMap<String, String>();
                         params.put("num_pedido", cod_pedido);
-                        params.put("foto", ficheroCodificado);
                         params.put("nombre_fichero", nombreFichero);
-
+                        Log.d("Params", params.toString());
+                        params.put("foto", ficheroCodificado);
                         return params;
                     }
                 };
@@ -1216,5 +1184,19 @@ public class Documentacion extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    public ProgressDialog muestraLoader(String mensaje){
+
+        progressDialog = new ProgressDialog(Documentacion.this);
+        progressDialog.setMessage("Espere, por favor"); // Setting Message
+        progressDialog.setTitle(mensaje); // Setting Title
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
+        progressDialog.show(); // Display Progress Dialog
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        return progressDialog;
+
     }
 }

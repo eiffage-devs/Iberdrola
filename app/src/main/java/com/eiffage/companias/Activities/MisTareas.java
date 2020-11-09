@@ -20,6 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -48,6 +49,9 @@ import java.util.TimeZone;
 
 public class MisTareas extends AppCompatActivity {
 
+    private String URL_ACTUALIZAR_TAREAS = "-";
+    private String URL_TAREAS_TERMINADAS = "-";
+
     ListView listaTareas;
     ArrayList<Tarea> misTareas;
     MisTareasAdapter adapter;
@@ -67,6 +71,9 @@ public class MisTareas extends AppCompatActivity {
         mostrarUltimaActualizacion();
         misTareas = new ArrayList<>();
         pedido = "todo";
+
+        URL_ACTUALIZAR_TAREAS = getResources().getString(R.string.urlActualizarTareas);
+        URL_TAREAS_TERMINADAS = getResources().getString(R.string.urlTareasTerminadas);
         //----------Recibir datos de usuario de la activity anterior----------\\
 
         Intent i = getIntent();
@@ -181,7 +188,7 @@ public class MisTareas extends AppCompatActivity {
         actualizarTareas = findViewById(R.id.btnActualizarDocs);
         actualizarTareas.setEnabled(false);
         RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest sr = new StringRequest(Request.Method.GET, getResources().getString(R.string.urlBase) + getResources().getString(R.string.urlGetTareas),
+        StringRequest sr = new StringRequest(Request.Method.GET, URL_ACTUALIZAR_TAREAS,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -233,12 +240,13 @@ public class MisTareas extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String>  params = new HashMap<String, String>();
-                params.put("Content-Type", "application/json");
+                //params.put("Content-Type", "application/json");
                 params.put("Authorization", "Bearer " + miUsuario.getToken());
 
                 return params;
             }
         };
+        sr.setRetryPolicy((new DefaultRetryPolicy(60 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)));
         queue.add(sr);
 
 
@@ -412,7 +420,7 @@ public class MisTareas extends AppCompatActivity {
         progressDialog.setCancelable(false);
         progressDialog.show();
         RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest sr = new StringRequest(Request.Method.GET, getResources().getString(R.string.urlBase) + getResources().getString(R.string.urlTareasTerminadas),
+        StringRequest sr = new StringRequest(Request.Method.GET, URL_TAREAS_TERMINADAS,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -451,7 +459,7 @@ public class MisTareas extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String>  params = new HashMap<String, String>();
-                params.put("Content-Type", "application/json");
+                //params.put("Content-Type", "application/json");
                 params.put("Authorization", "Bearer " + miUsuario.getToken());
 
                 return params;

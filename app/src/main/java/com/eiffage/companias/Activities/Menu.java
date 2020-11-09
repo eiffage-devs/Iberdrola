@@ -1,17 +1,24 @@
 package com.eiffage.companias.Activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -19,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.eiffage.companias.DocumentacionGeneral;
+import com.eiffage.companias.DocumentacionGeneralV2;
 import com.eiffage.companias.Objetos.Usuario;
 import com.eiffage.companias.R;
 
@@ -30,9 +38,12 @@ import java.util.Map;
 
 public class Menu extends AppCompatActivity {
 
+    private String URL_DATOS_USUARIO = "-";
+    private String URL_ULTIMA_VERSION = "-";
+
     TextView txtusuario, txtempresa;
     Usuario miUsuario;
-    static String urlCheck;
+    static String token;
 
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
@@ -60,7 +71,8 @@ public class Menu extends AppCompatActivity {
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.custom_logo);
 
-
+        URL_DATOS_USUARIO = getResources().getString(R.string.urlBase) + getResources().getString(R.string.urlCheck);
+        URL_ULTIMA_VERSION = getResources().getString(R.string.urlUltimaVersion);
 
         Intent intent = getIntent();
         try{
@@ -74,10 +86,10 @@ public class Menu extends AppCompatActivity {
         }
         catch (NullPointerException e){
             e.printStackTrace();
+            txtusuario.setText("-");
+            txtempresa.setText("-");
         }
 
-
-        urlCheck = getResources().getString(R.string.urlBase) + getResources().getString(R.string.urlCheck);
         comprobarDatos();
     }
 
@@ -112,10 +124,10 @@ public class Menu extends AppCompatActivity {
 
     public void comprobarDatos(){
         SharedPreferences myPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-        final String token = myPrefs.getString("token", "Sin valor");
+        token = myPrefs.getString("token", "Sin valor");
 
         RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest sr = new StringRequest(Request.Method.GET, urlCheck,
+        StringRequest sr = new StringRequest(Request.Method.GET, URL_DATOS_USUARIO,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -128,6 +140,19 @@ public class Menu extends AppCompatActivity {
                             String delegacion=job.getString("delegacion");
                             String cod_recurso=job.getString("cod_recurso");
                             miUsuario = new Usuario(token, email, empresa, nombre, delegacion, cod_recurso);
+
+                            txtusuario.setText(email);
+                            txtempresa.setText(empresa);
+
+                            //Comprobar actualizaciones
+                            try{
+                                PackageInfo packageInfo = Menu.this.getPackageManager().getPackageInfo(getPackageName(), 0);
+                                int buildVersion = packageInfo.versionCode;
+                                ultimaVersion("" + buildVersion);
+                                Log.d("Version code", buildVersion + "");
+                            }catch (PackageManager.NameNotFoundException e){
+                                e.printStackTrace();
+                            }
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -171,7 +196,66 @@ public class Menu extends AppCompatActivity {
     }
 
     public void documentacionGeneral(){
-        Intent i = new Intent(Menu.this, DocumentacionGeneral.class);
+        //Intent i = new Intent(Menu.this, DocumentacionGeneral.class);
+        Intent i = new Intent(Menu.this, DocumentacionGeneralV2.class);
         startActivity(i);
+    }
+
+    public void ultimaVersion(final String local){
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL_ULTIMA_VERSION,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        try {
+                            JSONObject jo = new JSONObject(response);
+                            String ultima = jo.getString("content");
+
+                            if(!ultima.equals(local)){
+                                final AlertDialog.Builder builder = new AlertDialog.Builder(Menu.this);
+                                builder.setTitle("Actualización disponible")
+                                        .setMessage("Hay una nueva versión disponible de la aplicación.\n\t¿Quieres actualizarla ahora?")
+                                        .setCancelable(false)
+                                        .setNegativeButton("En otro momento", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        })
+                                        . setPositiveButton("Actualizar", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.eiffage.companias"); // missing 'http://' will cause crashed
+                                                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                                                startActivity(intent);
+                                            }
+                                        });
+                                builder.show();
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("Error VERSION APP", error.toString());
+
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                //params.put("Content-Type", "application/json");
+                params.put("Authorization", "Bearer " + token);
+
+                return params;
+            }
+        };
+        queue.add(stringRequest);
+        stringRequest.setRetryPolicy((new DefaultRetryPolicy(10 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)));
     }
 }

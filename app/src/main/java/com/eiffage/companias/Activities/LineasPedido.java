@@ -33,6 +33,8 @@ import java.util.Map;
 
 public class LineasPedido extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
+    private String URL_LINEAS_PEDIDO = "-";
+
     ListView lineasPedido;
     String pedido;
 
@@ -56,6 +58,8 @@ public class LineasPedido extends AppCompatActivity implements SearchView.OnQuer
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lineas_pedido);
 
+        URL_LINEAS_PEDIDO = getResources().getString(R.string.urlLineasPedido);
+
         lineasPedido = findViewById(R.id.listaLineasPedido);
         myPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
         final String tokenGuardado = myPrefs.getString("token", "Sin valor");
@@ -65,7 +69,7 @@ public class LineasPedido extends AppCompatActivity implements SearchView.OnQuer
 
         //----------Petición a la API para recuperar las tareas activas del usuario----------\\
         RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest sr = new StringRequest(Request.Method.GET, getResources().getString(R.string.urlBase) + getResources().getString(R.string.urlLineasPedido) + cod_pedido,
+        StringRequest sr = new StringRequest(Request.Method.GET, URL_LINEAS_PEDIDO + cod_pedido,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

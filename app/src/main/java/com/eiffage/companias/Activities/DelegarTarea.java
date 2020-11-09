@@ -27,10 +27,13 @@ import com.eiffage.companias.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 public class DelegarTarea extends AppCompatActivity {
+
+    private String URL_TRASPASAR_TAREA = "-";
 
     EditText campoBusqueda;
     Button buscar, delegar;
@@ -46,6 +49,8 @@ public class DelegarTarea extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delegar_tarea);
 
+        URL_TRASPASAR_TAREA = getResources().getString(R.string.urlTraspasarTarea);
+
         campoBusqueda = findViewById(R.id.campoBusqueda);
         buscar = findViewById(R.id.btnbuscar);
         delegar = findViewById(R.id.btnDelegar);
@@ -60,7 +65,6 @@ public class DelegarTarea extends AppCompatActivity {
             public void onClick(View v) {
                 isDelegable = true;
                 buscar();
-
             }
         });
 
@@ -77,6 +81,8 @@ public class DelegarTarea extends AppCompatActivity {
         Intent i = getIntent();
         idTarea = i.getStringExtra("idTarea");
         cod_pedido = i.getStringExtra("cod_pedido");
+        Log.d("idTarea", idTarea);
+        Log.d("cod_pedido", cod_pedido);
     }
 
     public void buscar(){
@@ -121,6 +127,8 @@ public class DelegarTarea extends AppCompatActivity {
                                         empresa.setText("Empresa: " + jo.getString("empresa"));
                                         progressDialog.dismiss();
                                     }
+                                    Log.d("idTarea", idTarea);
+                                    Log.d("cod_pedido", cod_pedido);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -143,7 +151,6 @@ public class DelegarTarea extends AppCompatActivity {
                     Map<String, String>  params = new HashMap<String, String>();
                     params.put("Content-Type", "application/json");
                     params.put("Authorization", "Bearer " + token);
-
                     return params;
                 }
             };
@@ -152,9 +159,11 @@ public class DelegarTarea extends AppCompatActivity {
     }
 
     public void delegar(){
+        Log.d("idTarea", idTarea);
+        Log.d("cod_pedido", cod_pedido);
         if(!nombre.getText().toString().equals("Nombre:")){
             RequestQueue queue = Volley.newRequestQueue(this);
-            StringRequest sr = new StringRequest(Request.Method.POST, getResources().getString(R.string.urlBase) + getResources().getString(R.string.urlTraspasarTarea),
+            StringRequest sr = new StringRequest(Request.Method.POST, URL_TRASPASAR_TAREA,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
@@ -183,7 +192,7 @@ public class DelegarTarea extends AppCompatActivity {
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String>  params = new HashMap<String, String>();
-                    params.put("Content-Type", "application/json");
+                    //params.put("Content-Type", "application/json");
                     params.put("Authorization", "Bearer " + token);
 
                     return params;
@@ -193,10 +202,12 @@ public class DelegarTarea extends AppCompatActivity {
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
                     Map<String, String> params = new HashMap<String, String>();
+                    Log.d("Param idTarea", idTarea);
+                    Log.d("Param cod_pedido", cod_pedido);
                     params.put("usuario", cod_recurso);
                     params.put("tarea", idTarea);
                     params.put("pedido", cod_pedido);
-
+                    Log.d("Params traspaso", params.toString());
                     return params;
                 }
             };

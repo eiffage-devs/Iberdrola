@@ -96,7 +96,6 @@ public class CrearAveria extends AppCompatActivity {
                         Log.d("RESPONSE", response);
                         progressDialog.dismiss();
 
-
                         JSONObject job= null;
                         try {
                             job = new JSONObject(response);
@@ -119,7 +118,6 @@ public class CrearAveria extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("Content-Type", "application/json");
                 params.put("Authorization", "Bearer " + token);
 
                 return params;
@@ -132,7 +130,7 @@ public class CrearAveria extends AppCompatActivity {
                 params.put("gestor" ,txtGestor.getText().toString());
                 params.put("observaciones" ,txtDescripcion.getText().toString());
                 params.put("localidad", txtLocalidad.getText().toString());
-
+                Log.d("Params averia", params.toString());
                 return params;
             }
         };
@@ -143,7 +141,6 @@ public class CrearAveria extends AppCompatActivity {
     }
 
     public boolean comprobarCampos(){
-
         podac = txtPodac.getText().toString();
         jefeObra = txtJefeObra.getText().toString();
         gestor = txtGestor.getText().toString();

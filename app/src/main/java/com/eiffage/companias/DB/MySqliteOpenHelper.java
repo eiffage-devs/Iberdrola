@@ -90,9 +90,6 @@ public class MySqliteOpenHelper  extends SQLiteOpenHelper {
         db.execSQL("DELETE FROM Averia WHERE cod_recurso LIKE '" + cod_recurso + "'");
     }
 
-
-
-
     public void insertarEditable(SQLiteDatabase db, String rutaInterna, String nombreQueSeMuestra,  String cod_pedido){
         Cursor c = db.rawQuery("SELECT * FROM Editable WHERE cod_pedido LIKE '" + cod_pedido + "' AND nombreQueSeMuestra LIKE '" + nombreQueSeMuestra + "' AND rutaInterna LIKE '" + rutaInterna + "'", null);
         if(c.getCount() == 0){
@@ -145,6 +142,13 @@ public class MySqliteOpenHelper  extends SQLiteOpenHelper {
         Log.d("INSERCION DOCUMENTO", "AHORA HAY " + c.getCount() + " FILAS EN LA TABLA DOCUMENTO");
         c.close();
 
+    }
+
+    public void borrarTodosDocumentosGenerales(SQLiteDatabase db){
+        db.execSQL("DELETE FROM Documento WHERE categoria LIKE 'Docu_General_IBE'");
+        Cursor c = db.rawQuery("SELECT * FROM Documento WHERE categoria LIKE 'Docu_General_IBE'", null);
+        Log.d("BORRADO DOCUS GENERALES", "AHORA HAY " + c.getCount() + " DOCUMENTOS GENERALES");
+        c.close();
     }
 
     public void borrarFicherosDePedido(SQLiteDatabase db, String cod_pedido, String categoria){

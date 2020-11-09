@@ -281,7 +281,25 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:background="@color/AzulBootstrap"
+            android:drawableTop="@android:drawable/ic_menu_camera"
             android:text="Añadir foto de la obra"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/btnAñadirFotoDesdeGaleria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btnAñadir"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@color/AzulBootstrap"
+            android:drawableTop="@android:drawable/ic_menu_gallery"
+            android:onClick="añadirFotoDesdeGaleria"
+            android:paddingBottom="3dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="3dp"
+            android:text="Añadir foto desde galería"
             android:textColor="@android:color/white" />
 
         <Button
@@ -318,6 +336,21 @@
             android:gravity="center"
             android:onClick="enviarInforme"
             android:text="Enviar fotos"
+            android:textAlignment="center"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/btnEliminarTarea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/RojoBootstrap"
+            android:gravity="center"
+            android:onClick="eliminarTarea"
+            android:text="Eliminar Tarea"
             android:textAlignment="center"
             android:textColor="@android:color/white" />
     </LinearLayout>

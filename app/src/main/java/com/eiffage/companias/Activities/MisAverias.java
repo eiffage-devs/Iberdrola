@@ -45,6 +45,8 @@ import java.util.TimeZone;
 
 public class MisAverias extends AppCompatActivity {
 
+    private String URL_ACTUALIZAR_AVERIAS = "-";
+
     ListView listaAverias;
     ArrayList<Averia> misAverias;
     MisAveriasAdapter adapter;
@@ -61,6 +63,8 @@ public class MisAverias extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mis_averias);
 
+        URL_ACTUALIZAR_AVERIAS = getResources().getString(R.string.urlListaAverias);
+
         cod_recurso = "";
 
         try{
@@ -76,23 +80,7 @@ public class MisAverias extends AppCompatActivity {
         myDataBase = mySqliteOpenHelper.getWritableDatabase();
 
         listaAverias = findViewById(R.id.listaAverias);
-        listaAverias.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Intent intent = new Intent(MisAverias.this, TareasAverias.class);
-                //intent.putExtra("codAveria", misAverias.get(position).getCod_averia());
-                //startActivity(intent);
-            }
-        });
 
-        /*actualizarAverias = findViewById(R.id.btnActualizarAverias);
-        actualizarAverias.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                actualizarAverias();
-            }
-        });
-        */
         actualizarAverias();
         mostrarAveriasLocales();
         mostrarUltimaActualizacion();
@@ -110,12 +98,11 @@ public class MisAverias extends AppCompatActivity {
         progressDialog.show();
 
         RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest sr = new StringRequest(Request.Method.GET, getResources().getString(R.string.urlBase) + getResources().getString(R.string.urlListaAverias) + cod_recurso,
+        StringRequest sr = new StringRequest(Request.Method.GET, URL_ACTUALIZAR_AVERIAS + cod_recurso,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
-
                             JSONObject job = new JSONObject(response);
                             Log.d("response", response);
                             String content = job.getString("content");
@@ -153,7 +140,7 @@ public class MisAverias extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("Content-Type", "application/json");
+                //params.put("Content-Type", "application/json");
                 params.put("Authorization", "Bearer " + miUsuario.getToken());
 
                 return params;

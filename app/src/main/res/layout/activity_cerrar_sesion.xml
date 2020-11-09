@@ -1,199 +1,207 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/NegroBootstrap"
-    android:orientation="vertical"
     tools:context="com.eiffage.companias.Activities.CerrarSesion">
 
-    <TextView
-        android:id="@+id/textView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:text="Versión de la app:  1.4"
-        android:textAlignment="center"
-        android:textColor="@android:color/white"
-        android:textSize="24sp"
-        android:textStyle="bold" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:background="@android:color/white"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/imageView8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:adjustViewBounds="true"
-            app:srcCompat="@drawable/usuario" />
 
         <TextView
-            android:id="@+id/textView18"
+            android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/imageView8"
-            android:background="@android:color/background_light"
-            android:gravity="left"
-            android:padding="10dp"
-            android:text="Datos de usuario"
-            android:textColor="@android:color/black"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/textView19"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textView18"
-            android:background="@android:color/background_light"
-            android:paddingBottom="3dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="3dp"
-            android:text="Usuario:"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/txtemail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/textView18"
-            android:layout_toRightOf="@+id/textView19"
-            android:background="@android:color/white"
-            android:paddingBottom="3dp"
-            android:paddingLeft="20dp"
-            android:paddingTop="3dp"
-            android:text=""
-            android:textColor="@android:color/black" />
-
-        <TextView
-            android:id="@+id/textView20"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textView19"
-            android:background="@android:color/background_light"
-            android:paddingBottom="3dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="3dp"
-            android:text="Nombre:"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/txtusuario"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/txtemail"
-            android:layout_toRightOf="@+id/textView20"
-            android:background="@android:color/white"
-            android:paddingBottom="3dp"
-            android:paddingLeft="20dp"
-            android:paddingTop="3dp"
-            android:text=""
-            android:textColor="@android:color/black" />
-
-        <TextView
-            android:id="@+id/textView21"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/textView20"
-            android:background="@android:color/white"
-            android:paddingBottom="3dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="3dp"
-            android:text="Empresa:"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/txtempresa"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/txtusuario"
-            android:layout_toRightOf="@+id/textView21"
-            android:background="@android:color/white"
-            android:paddingBottom="3dp"
-            android:paddingLeft="20dp"
-            android:paddingTop="3dp"
-            android:text=""
-            android:textColor="@android:color/black" />
-
-        <TextView
-            android:id="@+id/textView22"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textView21"
-            android:background="@android:color/background_light"
-            android:paddingBottom="3dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="3dp"
-            android:text="Delegación:"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/txtdelegacion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/txtempresa"
-            android:layout_toRightOf="@+id/textView22"
-            android:background="@android:color/white"
-            android:paddingBottom="3dp"
-            android:paddingLeft="20dp"
-            android:paddingTop="3dp"
-            android:text=""
-            android:textColor="@android:color/black" />
-
-        <TextView
-            android:id="@+id/textView23"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textView22"
-            android:background="@android:color/background_light"
-            android:paddingBottom="3dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="3dp"
-            android:text="Código de recurso:"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/txtcod_usuario"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/txtdelegacion"
-            android:layout_toRightOf="@+id/textView23"
-            android:background="@android:color/white"
-            android:paddingBottom="3dp"
-            android:paddingLeft="20dp"
-            android:paddingTop="3dp"
-            android:text=""
-            android:textColor="@android:color/black" />
-
-        <Button
-            android:id="@+id/btnCerrarSesion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/txtcod_usuario"
-            android:layout_margin="10dp"
-            android:background="@color/AzulBootstrap"
-            android:onClick="cerrarSesion"
-            android:text="Cerrar sesión"
+            android:layout_margin="20dp"
+            android:text="Versión de la app:  1.5.3"
+            android:textAlignment="center"
             android:textColor="@android:color/white"
+            android:textSize="24sp"
             android:textStyle="bold" />
-    </RelativeLayout>
-</LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:background="@android:color/white"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:adjustViewBounds="true"
+                app:srcCompat="@drawable/usuario" />
+
+            <TextView
+                android:id="@+id/textView18"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/imageView8"
+                android:background="@android:color/background_light"
+                android:gravity="left"
+                android:padding="10dp"
+                android:text="Datos de usuario"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/textView19"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textView18"
+                android:background="@android:color/background_light"
+                android:paddingBottom="3dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="3dp"
+                android:text="Usuario:"
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtemail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/textView18"
+                android:layout_toRightOf="@+id/textView19"
+                android:background="@android:color/white"
+                android:paddingBottom="3dp"
+                android:paddingLeft="20dp"
+                android:paddingTop="3dp"
+                android:text=""
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/textView20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textView19"
+                android:background="@android:color/background_light"
+                android:paddingBottom="3dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="3dp"
+                android:text="Nombre:"
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtusuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/txtemail"
+                android:layout_toRightOf="@+id/textView20"
+                android:background="@android:color/white"
+                android:paddingBottom="3dp"
+                android:paddingLeft="20dp"
+                android:paddingTop="3dp"
+                android:text=""
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/textView21"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/textView20"
+                android:background="@android:color/white"
+                android:paddingBottom="3dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="3dp"
+                android:text="Empresa:"
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtempresa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/txtusuario"
+                android:layout_toRightOf="@+id/textView21"
+                android:background="@android:color/white"
+                android:paddingBottom="3dp"
+                android:paddingLeft="20dp"
+                android:paddingTop="3dp"
+                android:text=""
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/textView22"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textView21"
+                android:background="@android:color/background_light"
+                android:paddingBottom="3dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="3dp"
+                android:text="Delegación:"
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtdelegacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/txtempresa"
+                android:layout_toRightOf="@+id/textView22"
+                android:background="@android:color/white"
+                android:paddingBottom="3dp"
+                android:paddingLeft="20dp"
+                android:paddingTop="3dp"
+                android:text=""
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/textView23"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textView22"
+                android:background="@android:color/background_light"
+                android:paddingBottom="3dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="3dp"
+                android:text="Código de recurso:"
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtcod_usuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/txtdelegacion"
+                android:layout_toRightOf="@+id/textView23"
+                android:background="@android:color/white"
+                android:paddingBottom="3dp"
+                android:paddingLeft="20dp"
+                android:paddingTop="3dp"
+                android:text=""
+                android:textColor="@android:color/black" />
+
+            <Button
+                android:id="@+id/btnCerrarSesion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtcod_usuario"
+                android:layout_margin="10dp"
+                android:background="@color/AzulBootstrap"
+                android:onClick="cerrarSesion"
+                android:text="Cerrar sesión"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</ScrollView>

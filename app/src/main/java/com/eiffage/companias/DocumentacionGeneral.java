@@ -61,7 +61,7 @@ import java.util.regex.Pattern;
 
 public class DocumentacionGeneral extends AppCompatActivity {
 
-    private static final String URL_Actualizar_Documentos = "http://82.223.65.75:8000/api_iberdrola/getDocumentosGeneralesPedidoIBE";
+    private String URL_ACTUALIZAR_DOCUMENTOS = "-";
     ProgressDialog progressDialog;
     SharedPreferences sp;
     String token, delegacion;
@@ -93,6 +93,8 @@ public class DocumentacionGeneral extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Documentación general");
 
+        URL_ACTUALIZAR_DOCUMENTOS = getResources().getString(R.string.urlActualizarDocumentos);
+
         listaDocs = findViewById(R.id.listaDocsGeneral);
         ultimaActualizacion = findViewById(R.id.ultimaActualizacion);
 
@@ -107,7 +109,6 @@ public class DocumentacionGeneral extends AppCompatActivity {
         db = mySqliteOpenHelper.getWritableDatabase();
 
         llenarArrayListLocal();
-
 
         listaDocs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -138,7 +139,6 @@ public class DocumentacionGeneral extends AppCompatActivity {
                         startActivity(i);
                     }
 
-
             }
         });
 
@@ -152,7 +152,7 @@ public class DocumentacionGeneral extends AppCompatActivity {
 
         muestraLoader("Actualizando documentos...");
         RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest sr = new StringRequest(Request.Method.GET, URL_Actualizar_Documentos,
+        StringRequest sr = new StringRequest(Request.Method.GET, URL_ACTUALIZAR_DOCUMENTOS,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -216,7 +216,7 @@ public class DocumentacionGeneral extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String>  params = new HashMap<String, String>();
-                params.put("Content-Type", "application/json");
+                //params.put("Content-Type", "application/json");
                 params.put("Authorization", "Bearer " + token);
 
                 return params;
@@ -278,6 +278,7 @@ public class DocumentacionGeneral extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         progressDialog.dismiss();
+                        Log.d("ERROR", error.toString());
                         Toast.makeText(DocumentacionGeneral.this, "Ha habido algún problema. Inténtalo de nuevo en unos minutos.", Toast.LENGTH_SHORT).show();
 
                     }
@@ -380,7 +381,7 @@ public class DocumentacionGeneral extends AppCompatActivity {
         progressDialog = new ProgressDialog(DocumentacionGeneral.this);
         progressDialog.setMessage(message); // Setting Message
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
-        progressDialog.setCancelable(true);
+        progressDialog.setCancelable(false);
         progressDialog.show();
     }
 
@@ -399,7 +400,6 @@ public class DocumentacionGeneral extends AppCompatActivity {
         }
         return true;
     }
-
 
 
     public void guardarActualizacion(){

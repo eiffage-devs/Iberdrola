@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -83,9 +84,6 @@ public class Login extends AppCompatActivity {
             progressDialog.show();
             recuperarUsuario(tokenGuardado);
         }
-
-
-
     }
 
     public void hacerLogin() throws TimeoutError {
@@ -156,6 +154,8 @@ public class Login extends AppCompatActivity {
                             String empresa=job.getString("empresa");
                             String nombre=job.getString("nombre");
                             String delegacion=job.getString("delegacion");
+                            Log.d("DELEGACION", job.getString("delegacion"));
+
                             String cod_recurso=job.getString("cod_recurso");
                             nuevoUsuario[0] = new Usuario(token, email, empresa, nombre, delegacion, cod_recurso);
                             progressDialog.dismiss();

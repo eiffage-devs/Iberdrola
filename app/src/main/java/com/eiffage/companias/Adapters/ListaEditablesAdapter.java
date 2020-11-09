@@ -126,6 +126,7 @@ public class ListaEditablesAdapter extends ArrayAdapter<Documento> {
                     isTwoEqual = FileUtils.contentEquals(source, destination);
                     if(!isTwoEqual){
                         ((Documentacion) context).guardarComo(destino);
+                        notifyDataSetChanged();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
