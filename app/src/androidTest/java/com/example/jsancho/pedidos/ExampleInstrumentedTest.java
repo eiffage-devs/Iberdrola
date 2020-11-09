@@ -1,4 +1,4 @@
-package com.example.jsancho.pedidos;
+package com.eiffage.companias.companias;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

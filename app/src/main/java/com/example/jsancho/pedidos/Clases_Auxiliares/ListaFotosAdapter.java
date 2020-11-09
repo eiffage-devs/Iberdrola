@@ -1,4 +1,4 @@
-package com.example.jsancho.pedidos.Clases_Auxiliares;
+package com.eiffage.companias.companias.Adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
-import com.example.jsancho.pedidos.R;
+import com.eiffage.companias.companias.R;
 
 import java.util.ArrayList;
 

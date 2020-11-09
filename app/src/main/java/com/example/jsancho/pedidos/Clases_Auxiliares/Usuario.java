@@ -1,4 +1,4 @@
-package com.example.jsancho.pedidos.Clases_Auxiliares;
+package com.eiffage.companias.companias.Adapters;
 
 import android.os.Parcel;
 import android.os.Parcelable;

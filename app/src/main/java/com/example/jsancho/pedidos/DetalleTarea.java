@@ -1,4 +1,4 @@
-package com.example.jsancho.pedidos;
+package com.eiffage.companias.companias;
 
 import android.Manifest;
 import android.content.Context;
@@ -17,7 +17,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.jsancho.pedidos.Clases_Auxiliares.ListaFotosAdapter;
+import com.eiffage.companias.companias.Adapters.ListaFotosAdapter;
 
 import java.io.File;
 import java.io.FileInputStream;

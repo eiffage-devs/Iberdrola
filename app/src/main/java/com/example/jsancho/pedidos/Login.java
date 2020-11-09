@@ -1,4 +1,4 @@
-package com.example.jsancho.pedidos;
+package com.eiffage.companias.companias;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -24,7 +24,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.jsancho.pedidos.Clases_Auxiliares.Usuario;
+import com.eiffage.companias.companias.Adapters.Usuario;
 
 
 import org.json.JSONException;

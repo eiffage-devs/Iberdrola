@@ -1,4 +1,4 @@
-package com.example.jsancho.pedidos;
+package com.eiffage.companias.companias;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import com.example.jsancho.pedidos.Clases_Auxiliares.Usuario;
+import com.eiffage.companias.companias.Adapters.Usuario;
 
 public class CerrarSesion extends AppCompatActivity {
 

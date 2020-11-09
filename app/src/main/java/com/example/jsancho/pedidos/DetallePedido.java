@@ -1,13 +1,13 @@
-package com.example.jsancho.pedidos;
+package com.eiffage.companias.companias;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.example.jsancho.pedidos.Clases_Auxiliares.DocumentosAdapter;
-import com.example.jsancho.pedidos.Clases_Auxiliares.MisPedidosAdapter;
-import com.example.jsancho.pedidos.Clases_Auxiliares.Pedido;
+import com.eiffage.companias.companias.Adapters.DocumentosAdapter;
+import com.eiffage.companias.companias.Adapters.MisPedidosAdapter;
+import com.eiffage.companias.companias.Adapters.Pedido;
 
 import java.util.ArrayList;
 

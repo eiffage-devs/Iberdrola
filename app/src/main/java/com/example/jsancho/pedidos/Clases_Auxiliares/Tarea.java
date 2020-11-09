@@ -1,9 +1,9 @@
-package com.example.jsancho.pedidos.Clases_Auxiliares;
+package com.eiffage.companias.companias.Adapters;
 
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.example.jsancho.pedidos.R;
+import com.eiffage.companias.companias.R;
 
 public class Tarea {
 
