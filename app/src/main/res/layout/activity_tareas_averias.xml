@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.TareasAverias">
+
+    <TextView
+        android:id="@+id/codigoAveria"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:background="@color/NegroBootstrap"
+        android:padding="20dp"
+        android:text="AVERÍA "
+        android:textColor="#fff"
+        android:textSize="16sp" />
+
+    <ListView
+        android:id="@+id/listaTareasAverias"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/codigoAveria"
+        android:layout_marginBottom="50dp"
+        android:divider="#343a40"
+        android:dividerHeight="20dp" />
+
+    <Button
+        android:id="@+id/btnCrearTareaAveria"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/AzulBootstrap"
+        android:onClick="crearTarea"
+        android:padding="5dp"
+        android:text="Crear tarea"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+</RelativeLayout>

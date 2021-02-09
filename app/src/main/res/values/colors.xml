@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#FF0011</color>
+    <color name="colorPrimaryDark">#FF0000</color>
+    <color name="colorAccent">#fff</color>
     <color name="AzulBootstrap">#428bca</color>
+    <color name="bootstrapDisabled">#007bff</color>
+    <color name="VerdeBootstrap">#28a745</color>
+    <color name="VerdeDisabled">#55815f</color>
+    <color name="RojoBootstrap">#dc3545</color>
+    <color name="NegroBootstrap">#343a40</color>
 </resources>

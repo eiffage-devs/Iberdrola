@@ -1,17 +1,33 @@
 <resources>
-    <string name="app_name">Pedidos</string>
-    <string name="urlBase">http://82.223.65.75:8000/</string>
+    <string name="app_name">Eiffage Energía Compañías</string>
+    <string name="urlBase">https://inet.energia.eiffage.es:8002/</string>
     <string name="urlLogin">api_user/autenticar.json</string>
     <string name="urlCheck">api_check_user/check_token.json</string>
-    <string name="urlGetTareas">api_iberdrola/getListaPedidosUsuarioIBE</string>
+
+
+    <string name="urlDocumentos">api_iberdrola/getDocumentosPedidoIBE/p/</string>
+    <string name="urlGetDatosUsuario">api_iberdrola/getDatosUsuario/u/</string>
+    <string name="urlCrearAveria">api_iberdrola/creaAveriaIBE/averia</string>
+
+
+    <string name="urlActualizarDocumentos">https://inet.energia.eiffage.es:8002/api_iberdrola/getDocumentosGeneralesPedidoIBE</string>
+    <string name="urlActualizarTareas">https://inet.energia.eiffage.es:8002/api_iberdrola/getListaTareasUsuarioIBE</string>
+    <string name="urlTareasTerminadas">https://inet.energia.eiffage.es:8002/api_iberdrola/getListaTareasTerminadasUsuarioIBE</string>
+    <string name="urlListaAverias">https://inet.energia.eiffage.es:8002/api_iberdrola/getListaAveriasIBE/c/</string>
+    <string name="urlUltimaVersion">https://inet.energia.eiffage.es:8002/api_iberdrola/obtenerUltimaVersion</string>
+    <string name="urlLineasPedido">https://inet.energia.eiffage.es:8002/api_iberdrola/urlLineasPedido</string>
+    <string name="urlEnviarDocumento">"https://inet.energia.eiffage.es:8002/api_iberdrola/creaIBE/doc_IB"</string>
+    <string name="urlEnviarFoto">https://inet.energia.eiffage.es:8002/api_iberdrola/creaIBE/fotos_IB</string>
+    <string name="urlFinalizarTarea">https://inet.energia.eiffage.es:8002/api_iberdrola/finTareaIBE/tarea</string>
+    <string name="urlTraspasarTarea">https://inet.energia.eiffage.es:8002/api_iberdrola/AsignaTareaIBE/tarea/</string>
 
     <string-array name="categorias">
-        <item>1. Área: Centros de Transformación</item>
-        <item>2. Área: Líneas aéreas</item>
-        <item>3. Área: Redes Subterráneas</item>
-        <item>4. Área: Comunes</item>
-        <item>5. Área: Grupos electrógenos</item>
-        <item>6. Área: resto</item>
+        <item>1. Centros de Transformación</item>
+        <item>2. Líneas aéreas</item>
+        <item>3. Redes Subterráneas</item>
+        <item>4. Comunes</item>
+        <item>5. Grupos electrógenos</item>
+        <item>6. resto</item>
     </string-array>
 
     <string-array name="sub1">
@@ -55,7 +71,7 @@
         <item>b. Ensayos localización averías</item>
         <item>c. Paso aéreo subterráneo - BT</item>
         <item>d. Paso aéreo subterráneo MT/AT</item>
-        <item>e. Retidada 7 desmontaje de cable</item>
+        <item>e. Retirada 7 desmontaje de cable</item>
         <item>f. Tendido RSBT</item>
         <item>g. Tendido RSMT/AT</item>
         <item>h. Terminaciones/conectores/empalmes RSBT</item>
