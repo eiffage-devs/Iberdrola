@@ -11,7 +11,7 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
+import androidx.core.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;

@@ -14,7 +14,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.StrictMode;
-import android.support.v4.app.ActivityCompat;
+import androidx.core.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
