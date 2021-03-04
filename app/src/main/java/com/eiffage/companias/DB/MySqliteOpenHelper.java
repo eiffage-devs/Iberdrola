@@ -1,4 +1,4 @@
-package com.eiffage.companias.DB;
+package com.eiffage.companias.companias.DB;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,8 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Base64;
 import android.util.Log;
 
-import com.eiffage.companias.Objetos.Averia;
-import com.eiffage.companias.Objetos.Documento;
+import com.eiffage.companias.companias.Objetos.Averia;
+import com.eiffage.companias.companias.Objetos.Documento;
 
 import java.sql.SQLData;
 import java.util.ArrayList;

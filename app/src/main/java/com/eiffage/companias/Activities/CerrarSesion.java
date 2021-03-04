@@ -1,4 +1,4 @@
-package com.eiffage.companias.Activities;
+package com.eiffage.companias.companias.Activities;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import com.eiffage.companias.Objetos.Usuario;
+import com.eiffage.companias.companias.Objetos.Usuario;
 import com.eiffage.companias.R;
 
 public class CerrarSesion extends AppCompatActivity {

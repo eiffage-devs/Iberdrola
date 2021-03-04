@@ -1,4 +1,4 @@
-package com.eiffage.companias.Activities;
+package com.eiffage.companias.companias.Activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,7 +13,7 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.eiffage.companias.Objetos.TouchImageView;
+import com.eiffage.companias.companias.Objetos.TouchImageView;
 import com.eiffage.companias.R;
 
 public class FotoPantallaCompleta extends AppCompatActivity {

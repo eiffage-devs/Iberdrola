@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/NegroBootstrap"
     android:orientation="vertical"
-    tools:context="com.eiffage.companias.Activities.CerrarSesion">
+    tools:context="com.eiffage.companias.companias.Activities.CerrarSesion">
 
     <TextView
         android:id="@+id/textView"

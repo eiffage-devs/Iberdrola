@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/NegroBootstrap"
-    tools:context="com.eiffage.companias.Activities.CrearAveria">
+    tools:context="com.eiffage.companias.companias.Activities.CrearAveria">
 
     <RelativeLayout
         android:layout_width="match_parent"

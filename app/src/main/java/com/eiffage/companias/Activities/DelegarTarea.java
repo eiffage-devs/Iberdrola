@@ -1,4 +1,4 @@
-package com.eiffage.companias.Activities;
+package com.eiffage.companias.companias.Activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -21,7 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.eiffage.companias.DB.MySqliteOpenHelper;
+import com.eiffage.companias.companias.DB.MySqliteOpenHelper;
 import com.eiffage.companias.R;
 
 import org.json.JSONException;

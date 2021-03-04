@@ -1,4 +1,4 @@
-package com.eiffage.companias.Objetos;
+package com.eiffage.companias.companias.Objetos;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;

@@ -1,4 +1,4 @@
-package com.eiffage.companias.Adapters;
+package com.eiffage.companias.companias.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,7 +9,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.eiffage.companias.Objetos.Linea;
+import com.eiffage.companias.companias.Objetos.Linea;
 import com.eiffage.companias.R;
 
 import java.util.ArrayList;

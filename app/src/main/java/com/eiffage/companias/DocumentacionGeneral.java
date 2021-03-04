@@ -34,11 +34,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.eiffage.companias.Activities.Documentacion;
-import com.eiffage.companias.Activities.PDFViewer;
-import com.eiffage.companias.DB.MySqliteOpenHelper;
-import com.eiffage.companias.Objetos.Documento;
-import com.eiffage.companias.Objetos.InputStreamVolleyRequest;
+import com.eiffage.companias.companias.Activities.Documentacion;
+import com.eiffage.companias.companias.Activities.PDFViewer;
+import com.eiffage.companias.companias.DB.MySqliteOpenHelper;
+import com.eiffage.companias.companias.Objetos.Documento;
+import com.eiffage.companias.companias.Objetos.InputStreamVolleyRequest;
 
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;

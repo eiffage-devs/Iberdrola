@@ -1,4 +1,4 @@
-package com.eiffage.companias.Activities;
+package com.eiffage.companias.companias.Activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,7 +27,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.eiffage.companias.DocumentacionGeneral;
 import com.eiffage.companias.DocumentacionGeneralV2;
-import com.eiffage.companias.Objetos.Usuario;
+import com.eiffage.companias.companias.Objetos.Usuario;
 import com.eiffage.companias.R;
 
 import org.json.JSONException;

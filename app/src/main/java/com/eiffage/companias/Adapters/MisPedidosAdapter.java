@@ -1,4 +1,4 @@
-package com.eiffage.companias.Adapters;
+package com.eiffage.companias.companias.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,9 +9,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.eiffage.companias.Activities.MisTareas;
-import com.eiffage.companias.Activities.Documentacion;
-import com.eiffage.companias.Objetos.Pedido;
+import com.eiffage.companias.companias.Activities.MisTareas;
+import com.eiffage.companias.companias.Activities.Documentacion;
+import com.eiffage.companias.companias.Objetos.Pedido;
 import com.eiffage.companias.R;
 
 import java.util.ArrayList;

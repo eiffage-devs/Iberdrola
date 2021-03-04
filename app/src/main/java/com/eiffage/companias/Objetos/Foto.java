@@ -1,4 +1,4 @@
-package com.eiffage.companias.Objetos;
+package com.eiffage.companias.companias.Objetos;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

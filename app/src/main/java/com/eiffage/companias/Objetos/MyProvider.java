@@ -1,4 +1,4 @@
-package com.eiffage.companias.Objetos;
+package com.eiffage.companias.companias.Objetos;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;

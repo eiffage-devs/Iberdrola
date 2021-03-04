@@ -1,4 +1,4 @@
-package com.eiffage.companias.Adapters;
+package com.eiffage.companias.companias.Adapters;
 
 
 import android.app.Activity;
@@ -16,9 +16,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.eiffage.companias.Activities.Documentacion;
-import com.eiffage.companias.DB.MySqliteOpenHelper;
-import com.eiffage.companias.Objetos.Documento;
+import com.eiffage.companias.companias.Activities.Documentacion;
+import com.eiffage.companias.companias.DB.MySqliteOpenHelper;
+import com.eiffage.companias.companias.Objetos.Documento;
 import com.eiffage.companias.R;
 
 import org.apache.commons.io.FileUtils;

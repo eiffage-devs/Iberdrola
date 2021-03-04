@@ -1,4 +1,4 @@
-package com.eiffage.companias.Activities;
+package com.eiffage.companias.companias.Activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,10 +11,10 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.eiffage.companias.Adapters.MisPedidosAdapter;
-import com.eiffage.companias.DB.MySqliteOpenHelper;
-import com.eiffage.companias.Objetos.Pedido;
-import com.eiffage.companias.Objetos.Usuario;
+import com.eiffage.companias.companias.Adapters.MisPedidosAdapter;
+import com.eiffage.companias.companias.DB.MySqliteOpenHelper;
+import com.eiffage.companias.companias.Objetos.Pedido;
+import com.eiffage.companias.companias.Objetos.Usuario;
 import com.eiffage.companias.R;
 
 import java.util.ArrayList;

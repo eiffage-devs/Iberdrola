@@ -1,4 +1,4 @@
-package com.eiffage.companias.Adapters;
+package com.eiffage.companias.companias.Adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -10,7 +10,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.eiffage.companias.Activities.Documentacion;
+import com.eiffage.companias.companias.Activities.Documentacion;
 import com.eiffage.companias.R;
 
 import java.util.HashMap;

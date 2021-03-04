@@ -1,4 +1,4 @@
-package com.eiffage.companias.Adapters;
+package com.eiffage.companias.companias.Adapters;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.eiffage.companias.DB.MySqliteOpenHelper;
-import com.eiffage.companias.Objetos.Tarea;
+import com.eiffage.companias.companias.DB.MySqliteOpenHelper;
+import com.eiffage.companias.companias.Objetos.Tarea;
 import com.eiffage.companias.R;
 
 import java.util.ArrayList;

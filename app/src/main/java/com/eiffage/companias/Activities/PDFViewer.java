@@ -1,4 +1,4 @@
-package com.eiffage.companias.Activities;
+package com.eiffage.companias.companias.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;

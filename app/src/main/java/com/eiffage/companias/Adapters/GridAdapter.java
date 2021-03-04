@@ -1,4 +1,4 @@
-package com.eiffage.companias.Adapters;
+package com.eiffage.companias.companias.Adapters;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
-import com.eiffage.companias.Objetos.Documento;
+import com.eiffage.companias.companias.Objetos.Documento;
 import com.eiffage.companias.R;
 
 import java.util.ArrayList;

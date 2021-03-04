@@ -1,4 +1,4 @@
-package com.eiffage.companias.Activities;
+package com.eiffage.companias.companias.Activities;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -7,9 +7,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
 
-import com.eiffage.companias.Adapters.TareasTerminadasAdapter;
-import com.eiffage.companias.Objetos.Pedido;
-import com.eiffage.companias.Objetos.Tarea;
+import com.eiffage.companias.companias.Adapters.TareasTerminadasAdapter;
+import com.eiffage.companias.companias.Objetos.Pedido;
+import com.eiffage.companias.companias.Objetos.Tarea;
 import com.eiffage.companias.R;
 
 import org.json.JSONArray;

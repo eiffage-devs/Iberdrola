@@ -1,4 +1,4 @@
-package com.eiffage.companias.Activities;
+package com.eiffage.companias.companias.Activities;
 
 import android.Manifest;
 import android.app.Activity;
@@ -43,11 +43,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.eiffage.companias.Adapters.GridAdapter;
-import com.eiffage.companias.Adapters.ListaEditablesAdapter;
-import com.eiffage.companias.DB.MySqliteOpenHelper;
-import com.eiffage.companias.Objetos.Documento;
-import com.eiffage.companias.Objetos.InputStreamVolleyRequest;
+import com.eiffage.companias.companias.Adapters.GridAdapter;
+import com.eiffage.companias.companias.Adapters.ListaEditablesAdapter;
+import com.eiffage.companias.companias.DB.MySqliteOpenHelper;
+import com.eiffage.companias.companias.Objetos.Documento;
+import com.eiffage.companias.companias.Objetos.InputStreamVolleyRequest;
 import com.eiffage.companias.R;
 
 import org.apache.commons.io.FileUtils;

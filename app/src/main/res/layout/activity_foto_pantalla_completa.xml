@@ -8,7 +8,7 @@
     tools:context=".Activities.FotoPantallaCompleta">
 
 
-    <com.eiffage.companias.Objetos.TouchImageView
+    <com.eiffage.companias.companias.Objetos.TouchImageView
         android:id="@+id/fotoPantallaCompleta"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

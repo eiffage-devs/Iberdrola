@@ -1,4 +1,4 @@
-package com.eiffage.companias.Adapters;
+package com.eiffage.companias.companias.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,9 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.eiffage.companias.Activities.FotoPantallaCompleta;
-import com.eiffage.companias.Activities.NuevaFoto;
-import com.eiffage.companias.Objetos.Foto;
+import com.eiffage.companias.companias.Activities.FotoPantallaCompleta;
+import com.eiffage.companias.companias.Activities.NuevaFoto;
+import com.eiffage.companias.companias.Objetos.Foto;
 import com.eiffage.companias.R;
 
 import java.util.ArrayList;
